@@ -4,4 +4,4 @@ This app is basically an Instagram clone that is developed using flutter for fro
 
 # Database Schema
 
-<img src="/screenshots/image.png" width="500px" height="300px"</img>
+<img src="/screenshots/image.png"</img>
