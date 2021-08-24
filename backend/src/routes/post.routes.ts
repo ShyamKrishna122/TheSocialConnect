@@ -6,5 +6,7 @@ const postRouter = Router();
 //!POST
 postRouter.post("/add/:userEmail", PostController.addPost);
 
+//!GET
+postRouter.get("/:userEmail", PostController.getPosts);
 
 export { postRouter };

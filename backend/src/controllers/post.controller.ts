@@ -8,4 +8,9 @@ export class PostController {
     await connectionmanager.addPost(req, res);
   }
 
+  static async getPosts(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(PostRepository);
+    await connectionmanager.getPosts(req, res);
+  }
+
 }

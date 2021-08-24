@@ -14,6 +14,7 @@ export class FollowEntity extends BaseEntity {
 
   @Column({
     nullable: false,
+    type: "uuid",
   })
   followerId!: string;
 
