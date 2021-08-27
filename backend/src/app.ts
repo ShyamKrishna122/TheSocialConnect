@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { authRouter } from "./routes/user.routes";
 import { ConnectionOptions, createConnection } from "typeorm";
 import config from "./ormconfig";
@@ -18,6 +19,7 @@ createConnection(config as ConnectionOptions)
     }
     const app = express();
     const port = process.env.PORT || 8080;
+    app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
 

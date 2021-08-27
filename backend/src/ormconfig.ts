@@ -11,12 +11,14 @@ import { UserInfoEntity } from "./database/userInfo/entity/userInfo.entity";
 dotenv.config();
 
 const connectionOptions: ConnectionOptions = {
+  url: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: process.env.PASSWORD,
-  database: "postgres",
+  host: process.env.Host || "localhost",
+  port: Number(process.env.DB_Port) || 5432,
+  username: process.env.User || "postgres",
+  password: process.env.DB_Password || process.env.PASSWORD,
+  database: process.env.Database || "postgres",
   entities: [UserEntity, UserInfoEntity, PostEntity, CommentEntity, LikeEntity,FollowEntity],
   synchronize: true,
   dropSchema: false,
