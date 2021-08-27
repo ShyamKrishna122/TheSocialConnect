@@ -15,4 +15,7 @@ authRouter.get("/fetchUsers", UserController.fetchAllUsers);
 //!GET
 authRouter.get("/:userEmail", UserController.showUserPosts);
 
+//!GET
+authRouter.get("/verify", UserController.decodeUserData);
+
 export { authRouter };

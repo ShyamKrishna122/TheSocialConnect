@@ -210,4 +210,23 @@ export class UserRepository extends Repository<UserEntity> {
       });
     }
   }
+
+  //! Decoding users JWT
+  async decodeUserData(req: Request, res: Response) {
+    let tokenData = req.headers.authorization as string;
+    const jwt_secret = process.env.JWT_SECRET as string;
+    jwt.verify(tokenData, jwt_secret, async (error: any, userData: any) => {
+      if (error) {
+        return res.send({
+          received: false,
+          data: null,
+        });
+      } else {
+        return res.send({
+          received: true,
+          data: userData,
+        });
+      }
+    });
+  }
 }
