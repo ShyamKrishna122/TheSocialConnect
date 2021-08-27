@@ -6,11 +6,10 @@ import { PostEntity } from "../entity/post.entity";
 
 @EntityRepository(PostEntity)
 export class PostRepository extends Repository<PostEntity> {
-
   //!Add a new post
   async addPost(req: Request, res: Response) {
     let { userEmail } = req.params;
-    let { postTitle, postDescription, postMedia, postType } = req.body;
+    let { postTitle, postDescription, postMedia, type, imageType } = req.body;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({
@@ -22,7 +21,8 @@ export class PostRepository extends Repository<PostEntity> {
       post.postTitle = postTitle;
       post.postDescription = postDescription;
       post.postMedia = postMedia;
-      post.postType = postType;
+      post.type = type;
+      post.imageType = imageType;
       post.user = user!;
       await post.save();
       return res.send({

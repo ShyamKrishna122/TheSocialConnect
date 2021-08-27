@@ -42,7 +42,13 @@ export class PostEntity extends BaseEntity {
   @Column({
     nullable: false,
   })
-  postType!: number;
+  type!: number;
+
+  @Column({
+    type: "boolean",
+    nullable: false,
+  })
+  imageType!:boolean;
 
   @ManyToOne(() => UserEntity, (user) => user.post)
   user!: UserEntity;
