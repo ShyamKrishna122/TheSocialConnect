@@ -10,4 +10,4 @@ commentRouter.post("/add/:postId", CommentController.addComment);
 //!GET
 commentRouter.get("/:postId", CommentController.getPostComments);
 
-export { commentRouter };
+export { commentRouter};
