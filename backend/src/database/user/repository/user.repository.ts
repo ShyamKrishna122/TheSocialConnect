@@ -5,8 +5,6 @@ import * as EmailValidator from "email-validator";
 import bcrypt from "bcrypt";
 import { EntityRepository, getCustomRepository, Repository } from "typeorm";
 import { UserEntity } from "../entity/user.entity";
-import { createModuleResolutionCache } from "typescript";
-import { LikeRepository } from "../../likes/Repository/like.repository";
 
 dotenv.config();
 @EntityRepository(UserEntity)
@@ -179,7 +177,9 @@ export class UserRepository extends Repository<UserEntity> {
     });
   }
 
-  async fetchMyPosts(req: Request, res: Response) {
+  //!fetch posts of a particular user
+
+  async fetchUserPosts(req: Request, res: Response) {
     let { userEmail } = req.params;
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });

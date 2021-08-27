@@ -6,6 +6,8 @@ import { PostEntity } from "../entity/post.entity";
 
 @EntityRepository(PostEntity)
 export class PostRepository extends Repository<PostEntity> {
+
+  //!Add a new post
   async addPost(req: Request, res: Response) {
     let { userEmail } = req.params;
     let { postTitle, postDescription, postMedia, postType } = req.body;
@@ -34,6 +36,8 @@ export class PostRepository extends Repository<PostEntity> {
       });
     }
   }
+
+  //!get posts of the people you follow
 
   async getPosts(req: Request, res: Response) {
     let { userEmail } = req.params;

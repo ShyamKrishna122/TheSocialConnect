@@ -18,8 +18,8 @@ export class UserController {
     await connectionmanager.fetchAllUsers(req, res);
   }
 
-  static async showMyPosts(req: Request, res: Response) {
+  static async showUserPosts(req: Request, res: Response) {
     let connectionmanager = getManager().getCustomRepository(UserRepository);
-    await connectionmanager.fetchMyPosts(req, res);
+    await connectionmanager.fetchUserPosts(req, res);
   }
 }

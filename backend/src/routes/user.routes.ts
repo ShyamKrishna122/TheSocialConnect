@@ -13,6 +13,6 @@ authRouter.post("/login", UserController.login);
 authRouter.get("/fetchUsers", UserController.fetchAllUsers);
 
 //!GET
-authRouter.get("/myPosts/:userEmail", UserController.showMyPosts);
+authRouter.get("/:userEmail", UserController.showUserPosts);
 
 export { authRouter };

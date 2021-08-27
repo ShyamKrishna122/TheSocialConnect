@@ -6,6 +6,7 @@ import { LikeEntity } from "../entity/like.entity";
 
 @EntityRepository(LikeEntity)
 export class LikeRepository extends Repository<LikeEntity> {
+  //! adding like to a post
   async addLike(req: Request, res: Response) {
     let { postId } = req.params;
     let { userEmail } = req.body;
@@ -32,6 +33,8 @@ export class LikeRepository extends Repository<LikeEntity> {
       });
     }
   }
+
+  //! removing like of post
 
   async removeLike(req: Request, res: Response) {
     let { postId } = req.params;
@@ -60,6 +63,8 @@ export class LikeRepository extends Repository<LikeEntity> {
       });
     }
   }
+
+  //! checking if post is liked by the logged in user
 
   async isLikedByUser(req: Request, res: Response) {
     let { postId } = req.params;
@@ -94,6 +99,8 @@ export class LikeRepository extends Repository<LikeEntity> {
       });
     }
   }
+
+  //! get the total number of likes of a post
 
   async getPostLikesCount(req: Request, res: Response) {
     let { postId } = req.params;

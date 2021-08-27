@@ -5,6 +5,8 @@ import { FollowEntity } from "../entity/follower.entity";
 
 @EntityRepository(FollowEntity)
 export class FollowRepository extends Repository<FollowEntity> {
+
+  //! follow people
   async addFollowing(req: Request, res: Response) {
     let { followingId } = req.params;
     let { userEmail } = req.body;
@@ -28,6 +30,8 @@ export class FollowRepository extends Repository<FollowEntity> {
       });
     }
   }
+
+  //! unfollow people
 
   async removeFollowing(req: Request, res: Response) {
     let { followingId } = req.params;
@@ -59,6 +63,7 @@ export class FollowRepository extends Repository<FollowEntity> {
     }
   }
 
+  //! checking if a user follows another user or not
   async isFollowingUser(req: Request, res: Response) {
     let { followingId } = req.params;
     let { userEmail } = req.body;

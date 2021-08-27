@@ -6,6 +6,7 @@ import { CommentEntity } from "../entity/comment.entity";
 
 @EntityRepository(CommentEntity)
 export class CommentRepository extends Repository<CommentEntity> {
+  //! add comment to a post
   async addComment(req: Request, res: Response) {
     let { postId } = req.params;
     let { userEmail, commentText } = req.body;
@@ -33,6 +34,8 @@ export class CommentRepository extends Repository<CommentEntity> {
       });
     }
   }
+
+  //!get all the comments of a post
 
   async getPostComments(req: Request, res: Response) {
     let { postId } = req.params;
