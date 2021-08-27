@@ -28,7 +28,7 @@ createConnection(config as ConnectionOptions)
     app.get("/", (req, res) => {
       res.send({
         data: "The Social Connect",
-        message: "Connect With Your Peers",
+        message: "Connect With Your Peers and share posts",
       });
     });
 
