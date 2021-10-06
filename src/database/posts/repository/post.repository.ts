@@ -89,4 +89,32 @@ export class PostRepository extends Repository<PostEntity> {
       });
     }
   }
+
+  //! function to delete my post...
+  async deleteMyPost(req: Request, res: Response) {
+    let { postId } = req.params;
+    let { userEmail } = req.body;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+
+    try {
+      await this.createQueryBuilder("ScPosts")
+        .delete()
+        .from(PostEntity)
+        .where("postId=:postId", { postId: postId })
+        .andWhere("userId=:userId", { userId: user?.id })
+        .execute()
+        .then((data: any) => {
+          return res.send({
+            message: "Post removed",
+            deleted: true,
+          });
+        });
+    } catch (error) {
+      return res.send({
+        message: "Something went wrong",
+        deleted: false,
+      });
+    }
+  }
 }

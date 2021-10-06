@@ -12,5 +12,4 @@ export class PostController {
     let connectionmanager = getManager().getCustomRepository(PostRepository);
     await connectionmanager.getPosts(req, res);
   }
-
 }

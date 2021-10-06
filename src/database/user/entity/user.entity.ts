@@ -11,6 +11,7 @@ import { CommentEntity } from "../../comments/entity/comment.entity";
 import { FollowEntity } from "../../followers/entity/follower.entity";
 import { LikeEntity } from "../../likes/entity/like.entity";
 import { PostEntity } from "../../posts/entity/post.entity";
+import { StoryEntity } from "../../stories/entity/stories.entity";
 import { UserInfoEntity } from "../../userInfo/entity/userInfo.entity";
 
 @Entity("scUsers")
@@ -54,4 +55,8 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => FollowEntity, (follow) => follow.user)
   @JoinColumn()
   follow!: FollowEntity[];
+
+  @OneToMany(() => StoryEntity, (story) => story.user)
+  @JoinColumn()
+  story!: StoryEntity[];
 }

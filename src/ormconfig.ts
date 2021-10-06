@@ -5,6 +5,7 @@ import { CommentEntity } from "./database/comments/entity/comment.entity";
 import { FollowEntity } from "./database/followers/entity/follower.entity";
 import { LikeEntity } from "./database/likes/entity/like.entity";
 import { PostEntity } from "./database/posts/entity/post.entity";
+import { StoryEntity } from "./database/stories/entity/stories.entity";
 import { UserEntity } from "./database/user/entity/user.entity";
 import { UserInfoEntity } from "./database/userInfo/entity/userInfo.entity";
 
@@ -19,7 +20,15 @@ const connectionOptions: ConnectionOptions = {
   username: process.env.User || "postgres",
   password: process.env.DB_Password || process.env.PASSWORD,
   database: process.env.Database || "postgres",
-  entities: [UserEntity, UserInfoEntity, PostEntity, CommentEntity, LikeEntity,FollowEntity],
+  entities: [
+    UserEntity,
+    UserInfoEntity,
+    PostEntity,
+    CommentEntity,
+    LikeEntity,
+    FollowEntity,
+    StoryEntity,
+  ],
   synchronize: true,
   dropSchema: false,
   migrationsRun: true,

@@ -9,6 +9,7 @@ import { postRouter } from "./routes/post.routes";
 import { commentRouter } from "./routes/comment.routes";
 import { likeRouter } from "./routes/like.routes";
 import { followRouter } from "./routes/follow.routes";
+import { storyRouter } from "./routes/story.routes";
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ createConnection(config as ConnectionOptions)
     app.use("/comment", commentRouter);
     app.use("/like", likeRouter);
     app.use("/follow", followRouter);
+    app.use("/story", storyRouter);
 
     app.listen(app.get("port"), () => {
       console.log(`Server rocking over port ${app.get("port")}`);
