@@ -29,7 +29,7 @@ class PostModel {
       personId: map["userId"],
       personName: map["userName"],
       title: map["postTitle"],
-      description: map["description"],
+      description: map["postDescription"],
       personDp: map["userDp"],
       mediaUrls: map["postMedia"],
       postTime: map["postTime"],

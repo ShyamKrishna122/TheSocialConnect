@@ -9,7 +9,7 @@ export class PostRepository extends Repository<PostEntity> {
   //!Add a new post
   async addPost(req: Request, res: Response) {
     let { userEmail } = req.params;
-    let { postTitle, postDescription, postMedia, type, imageType } = req.body;
+    let { postDescription, type, imageType } = req.body;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({
@@ -18,9 +18,7 @@ export class PostRepository extends Repository<PostEntity> {
 
     try {
       let post = new PostEntity();
-      post.postTitle = postTitle;
       post.postDescription = postDescription;
-      post.postMedia = postMedia;
       post.type = type;
       post.imageType = imageType;
       post.user = user!;
@@ -58,6 +56,8 @@ export class PostRepository extends Repository<PostEntity> {
         .select("*")
         .leftJoinAndSelect("ScPosts.user", "user")
         .leftJoinAndSelect("user.info", "info")
+        .leftJoinAndSelect("ScPosts.postMedia", "postMedia")
+        .leftJoinAndSelect("postMedia.post", "post")
         .where("ScPosts.userId IN (" + subQuery.getQuery() + ")")
         .orderBy("ScPosts.postTime", "DESC")
         .setParameters(subQuery.getParameters())
@@ -66,10 +66,10 @@ export class PostRepository extends Repository<PostEntity> {
       let posts = postData.map((p: any) => {
         const post: any = {
           postId: p.postId,
-          postTitle: p.postTitle,
           postDescription: p.postDescription,
           postTime: p.postTime,
-          postMedia: p.postMedia.split(","),
+          postMediaUrl: p.mediaUrl,
+          postMediaType: p.mediaType,
           postType: p.type,
           postImageType: p.imageType,
           userId: p.userId,

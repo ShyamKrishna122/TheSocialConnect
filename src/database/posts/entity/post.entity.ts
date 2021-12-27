@@ -10,16 +10,12 @@ import {
 import { CommentEntity } from "../../comments/entity/comment.entity";
 import { LikeEntity } from "../../likes/entity/like.entity";
 import { UserEntity } from "../../user/entity/user.entity";
+import { PostMediaEntity } from "./post_media.entity";
 
 @Entity("ScPosts")
 export class PostEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   postId!: string;
-
-  @Column({
-    nullable: false,
-  })
-  postTitle!: string;
 
   @Column({
     nullable: false,
@@ -34,12 +30,6 @@ export class PostEntity extends BaseEntity {
   postTime!: Date;
 
   @Column({
-    type: "simple-array",
-    nullable: false,
-  })
-  postMedia!: string[];
-
-  @Column({
     nullable: false,
   })
   type!: number;
@@ -52,6 +42,10 @@ export class PostEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.post)
   user!: UserEntity;
+
+  @OneToMany(() => PostMediaEntity, (postMedia) => postMedia.post)
+  @JoinColumn()
+  postMedia!: PostMediaEntity[];
 
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   @JoinColumn()

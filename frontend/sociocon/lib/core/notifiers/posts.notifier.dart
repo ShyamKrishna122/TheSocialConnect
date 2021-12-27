@@ -11,16 +11,13 @@ class PostsNotifier extends ChangeNotifier {
       final Map<String, dynamic> _posts = await _postsAPI.fetchMembersPosts(
         userMail: userMail,
       );
-      print(_posts);
       if (_posts['received'] == true) {
         List<PostModel> _postsList = [];
-        List _postsData = _posts['message'];
+        List<dynamic> _postsData = _posts['message'];
+        print(_postsData);
         for (var data in _postsData) {
-          _postsList.add(
-            PostModel.fromMap(
-              map: data,
-            ),
-          );
+          PostModel _post = PostModel.fromMap(map: data);
+          _postsList.add(_post);
         }
         print(_postsList);
       } else {
