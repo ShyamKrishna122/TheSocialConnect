@@ -11,7 +11,7 @@ export class PostMediaRepository extends Repository<PostMediaEntity> {
 
         let postRepo = getCustomRepository(PostRepository);
         let post = await postRepo.findOne({
-            postId: postId
+            postId: postId,
         });
 
         try {

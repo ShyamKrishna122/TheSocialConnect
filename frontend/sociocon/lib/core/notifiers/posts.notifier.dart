@@ -15,11 +15,6 @@ class PostsNotifier extends ChangeNotifier {
         List<PostModel> _postsList = [];
         List<dynamic> _postsData = _posts['message'];
         print(_postsData);
-        for (var data in _postsData) {
-          PostModel _post = PostModel.fromMap(map: data);
-          _postsList.add(_post);
-        }
-        print(_postsList);
       } else {
         print(_posts['message']);
       }
