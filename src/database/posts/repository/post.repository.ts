@@ -54,14 +54,15 @@ export class PostRepository extends Repository<PostEntity> {
 
       let postData = await this.createQueryBuilder("ScPosts")
         .select("*")
-        .leftJoinAndSelect("ScPosts.user", "user")
-        .leftJoinAndSelect("user.info", "info")
-        .leftJoinAndSelect("ScPosts.postMedia", "postMedia")
-        .leftJoinAndSelect("postMedia.post", "post")
+        .innerJoin("ScPosts.user", "user")
+        .innerJoin("user.info", "info")
+        .innerJoin("ScPosts.postMedia", "postMedia")
+        .innerJoin("postMedia.post", "post")
         .where("ScPosts.userId IN (" + subQuery.getQuery() + ")")
         .orderBy("ScPosts.postTime", "DESC")
         .setParameters(subQuery.getParameters())
         .getRawMany();
+      
 
       let posts = postData.map((p: any) => {
         const post: any = {
