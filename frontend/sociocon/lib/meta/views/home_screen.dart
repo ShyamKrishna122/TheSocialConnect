@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/core/api/posts.api.dart';
 import 'package:sociocon/core/notifiers/posts.notifier.dart';
+import 'package:sociocon/core/notifiers/user.notifier.dart';
+import 'package:sociocon/core/services/cache_service.dart';
 import 'package:sociocon/meta/widget/post_body_widget.dart';
 import 'package:sociocon/meta/widget/story_body_widget.dart';
 
@@ -14,9 +16,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final CacheService _cacheService = new CacheService();
   @override
   void initState() {
-    
+    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
+    _cacheService.readCache(key: "jwtdata").then((token) async {
+      await userNotifier.decodeUserData(
+        context: context,
+        token: token!,
+      );
+    });
     super.initState();
   }
   @override

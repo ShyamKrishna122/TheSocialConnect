@@ -10,6 +10,10 @@ class UserNotifier extends ChangeNotifier {
   final UserAPI _userAPI = new UserAPI();
   final CacheService _cacheService = new CacheService();
 
+  UserInfoModel _userInfo = UserInfoModel();
+
+  UserInfoModel get userInfo => _userInfo;
+
   Future createProfile({
     required BuildContext context,
     required UserModel userModel,
@@ -57,6 +61,39 @@ class UserNotifier extends ChangeNotifier {
           ),
         );
       }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future decodeUserData({
+    required BuildContext context,
+    required String token,
+  }) async {
+    try {
+      _userAPI.decodeUserData(token: token).then((value) async {
+        final Map<String, dynamic> parsedData = await jsonDecode(value);
+        var userData = parsedData['data'];
+        if (userData != null) {
+          List<String>? userProfileData = await _cacheService.readProfileCache(
+            key: "userProfile",
+          );
+          _userInfo = UserInfoModel(
+            userModel: UserModel(
+              userId: userData['userId'],
+              userEmailId: userProfileData![0],
+              userName: userProfileData[1],
+              userPassword: userProfileData[2],
+            ),
+            userFullName: userProfileData[3],
+            userBio: userProfileData[4],
+            userDp: userProfileData[5],
+          );
+        } else {
+          Navigator.of(context).pushReplacementNamed(LoginRoute);
+        }
+        notifyListeners();
+      });
     } catch (error) {
       print(error);
     }
