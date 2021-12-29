@@ -207,6 +207,7 @@ export class UserRepository extends Repository<UserEntity> {
       return res.send({
         data: "Something went wrong",
         received: false,
+        filled: false,
       });
     }
   }
@@ -214,12 +215,12 @@ export class UserRepository extends Repository<UserEntity> {
   //! Decoding users JWT
   async decodeUserData(req: Request, res: Response) {
     let tokenData = req.headers.authorization as string;
-    const jwt_secret = process.env.JWT_SECRET as string;
+    const jwt_secret = process.env.JWT_SECRET_KEY as string;
     jwt.verify(tokenData, jwt_secret, async (error: any, userData: any) => {
       if (error) {
         return res.send({
           received: false,
-          data: null,
+          data: error,
         });
       } else {
         return res.send({

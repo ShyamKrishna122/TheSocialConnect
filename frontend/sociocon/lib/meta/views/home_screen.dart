@@ -15,6 +15,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   @override
+  void initState() {
+    
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,12 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black,
               thickness: 1,
             ),
-            //PostBodyWidget(),
+            PostBodyWidget(),
             MaterialButton(
               color: Colors.red,
               onPressed: () async{
                 await Provider.of<PostsNotifier>(context, listen: false).getPosts(
-                  userMail: "shyam@gmail.com",
+                  userMail: "sankee@gmail.com",
                 );
               },
             ),

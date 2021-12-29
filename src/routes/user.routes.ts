@@ -13,7 +13,7 @@ authRouter.post("/login", UserController.login);
 authRouter.get("/fetchUsers", UserController.fetchAllUsers);
 
 //!GET
-authRouter.get("/:userEmail", UserController.showUserPosts);
+authRouter.get("/posts/:userEmail", UserController.showUserPosts);
 
 //!GET
 authRouter.get("/verify", UserController.decodeUserData);

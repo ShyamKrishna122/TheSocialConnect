@@ -13,14 +13,44 @@ class PostsNotifier extends ChangeNotifier {
       );
       if (_posts['received'] == true) {
         List<PostModel> _postsList = [];
+        Map<int, Map<String, dynamic>> p1 = {};
         List<dynamic> _postsData = _posts['message'];
-        print(_postsData);
+        for (var data in _postsData) {
+          if (p1.containsKey(data['postId'])) {
+            var p2 = p1[data['postId']];
+            p2!['postMedia'].add({
+              'mediaType': data['postMediaType'],
+              'mediaUrl': data['postMediaUrl'],
+            });
+          } else {
+            p1[data['postId']] = {
+              'postId': data['postId'],
+              'postDescription': data['postDescription'],
+              'postTime': data['postTime'],
+              'postMedia': [
+                {
+                  'mediaType': data['postMediaType'],
+                  'mediaUrl': data['postMediaUrl'],
+                },
+              ],
+              'postType': data['postType'],
+              'postImageType': data['postImageType'],
+              'userId': data['userId'],
+              'userName': data['userName'],
+              'userDp': data['userDp'],
+            };
+          }
+        }
+        for (var data in p1.values) {
+          PostModel postModel = PostModel.fromMap(map: data);
+          _postsList.add(postModel);
+        }
+        return _postsList;
       } else {
-        print(_posts['message']);
+        return  _posts['message'];
       }
     } catch (error) {
-      print(error);
+      return  error;
     }
-    notifyListeners();
   }
 }

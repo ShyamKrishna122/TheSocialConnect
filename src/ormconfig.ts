@@ -21,12 +21,6 @@ const connectionOptions: ConnectionOptions = {
   username: process.env.User || "postgres",
   password: process.env.DB_Password || process.env.PASSWORD,
   database: process.env.Database || "postgres",
-  // type: "postgres",
-  // host: "localhost",
-  // port: 5432,
-  // username: "postgres",
-  // password: process.env.PASSWORD,
-  // database: "postgres",
   entities: [
     UserEntity,
     UserInfoEntity,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/post_model.dart';
+import 'package:sociocon/core/notifiers/posts.notifier.dart';
 import 'package:sociocon/meta/widget/posts_widget.dart';
 
 class PostBodyWidget extends StatelessWidget {
@@ -8,11 +10,12 @@ class PostBodyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return ListView.builder(
-      physics: AlwaysScrollableScrollPhysics(),
-      itemCount: 1,
-      itemBuilder: (context, index) {
-        return PostsWidget();
+    return FutureBuilder(
+      future: Provider.of<PostsNotifier>(context, listen: false).getPosts(
+        userMail: 'sankee@gmail.com',
+      ),
+      builder: (context, snapshot) {
+        return Container();
       },
     );
   }

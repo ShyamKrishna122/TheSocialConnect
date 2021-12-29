@@ -1,5 +1,5 @@
 const String BASE_URL = "https://thesocialconnect.herokuapp.com/";
-const String USER_URL = BASE_URL + "user";
+const String AUTH_URL = BASE_URL + "user";
 const String USER_INFO_URL = BASE_URL + "info";
 const String POST_URL = BASE_URL + "post";
 const String POST_MEDIA_URL = BASE_URL + "media";
