@@ -36,6 +36,7 @@ class UserNotifier extends ChangeNotifier {
         await _cacheService.writeProfileCache(
           key: "userProfile",
           value: [
+            userModel.userId as String,
             userModel.userEmailId as String,
             userModel.userName as String,
             userModel.userPassword as String,
@@ -78,17 +79,28 @@ class UserNotifier extends ChangeNotifier {
           List<String>? userProfileData = await _cacheService.readProfileCache(
             key: "userProfile",
           );
-          _userInfo = UserInfoModel(
-            userModel: UserModel(
-              userId: userData['userId'],
-              userEmailId: userProfileData![0],
-              userName: userProfileData[1],
-              userPassword: userProfileData[2],
-            ),
-            userFullName: userProfileData[3],
-            userBio: userProfileData[4],
-            userDp: userProfileData[5],
-          );
+          if (userProfileData == null) {
+            _userInfo = UserInfoModel(
+              userModel: UserModel(
+                userId: userData['userData']['id'],
+                userEmailId: userData['userData']['userEmail'],
+                userName: userData['userData']['userName'],
+                userPassword: userData['userData']['userPassword'],
+              ),
+            );
+          } else {
+            _userInfo = UserInfoModel(
+              userModel: UserModel(
+                userId: userData['userData']['id'],
+                userEmailId: userData['userData']['userEmail'],
+                userName: userData['userData']['userName'],
+                userPassword: userData['userData']['userPassword'],
+              ),
+              userFullName: userProfileData[4],
+              userBio: userProfileData[5],
+              userDp: userProfileData[6],
+            );
+          }
         } else {
           Navigator.of(context).pushReplacementNamed(LoginRoute);
         }

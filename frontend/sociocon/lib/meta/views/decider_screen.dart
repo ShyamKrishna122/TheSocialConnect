@@ -12,6 +12,11 @@ class DeciderScreen extends StatelessWidget {
     return FutureBuilder(
       future: _cacheService.readCache(key: "jwtdata"),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         if (snapshot.hasData) {
           return HomeScreen();
         } else {

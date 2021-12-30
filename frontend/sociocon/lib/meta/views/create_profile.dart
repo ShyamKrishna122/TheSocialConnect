@@ -5,9 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/notifiers/auth.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
+import 'package:sociocon/core/services/cache_service.dart';
 
 class CreateProfileScreen extends StatefulWidget {
-  const CreateProfileScreen({Key? key}) : super(key: key);
+  const CreateProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _CreateProfileScreenState createState() => _CreateProfileScreenState();
@@ -21,6 +24,20 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
+
+  final CacheService _cacheService = new CacheService();
+
+  @override
+  void initState() {
+    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
+    _cacheService.readCache(key: "jwtdata").then((token) async {
+      await userNotifier.decodeUserData(
+        context: context,
+        token: token!,
+      );
+    });
+    super.initState();
+  }
 
   // final picker = ImagePicker();
   // File userAvatar;
@@ -70,15 +87,14 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   createProfile() async {
     var userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    final UserModel userModel =
-        ModalRoute.of(context)!.settings.arguments as UserModel;
-    if (userModel.userEmailId!.isNotEmpty &&
+    final userInfoModel = userNotifier.userInfo;
+    if (userInfoModel.userModel!.userEmailId!.isNotEmpty &&
         nameController.text.isNotEmpty &&
         bioController.text.isNotEmpty) {
       await userNotifier.createProfile(
         context: context,
         name: nameController.text.trim(),
-        userModel: userModel,
+        userModel: userInfoModel.userModel!,
         bio: bioController.text.trim(),
         dp: "hskdfkdw",
       );
@@ -96,6 +112,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userModel = ModalRoute.of(context)!.settings.arguments as UserModel;
     return Scaffold(
       body: _isLoading == false
           ? Stack(

@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,9 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
             PostBodyWidget(),
             MaterialButton(
               color: Colors.red,
-              onPressed: () async{
-                await Provider.of<PostsNotifier>(context, listen: false).getPosts(
-                  userMail: "sankee@gmail.com",
+              onPressed: () async {
+                await _cacheService.deleteCache(
+                  context: context,
+                  key1: 'jwtdata',
+                  key2: 'userProfile',
                 );
               },
             ),

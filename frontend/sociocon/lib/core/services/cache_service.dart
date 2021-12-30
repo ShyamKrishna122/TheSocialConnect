@@ -36,11 +36,13 @@ class CacheService {
 
   Future deleteCache({
     required BuildContext context,
-    required String key,
+    required String key1,
+    required String key2,
   }) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    await sharedPreferences.remove(key).whenComplete(() {
+    await sharedPreferences.remove(key1);
+    await sharedPreferences.remove(key2).whenComplete(() {
       Navigator.of(context).pushReplacementNamed(LoginRoute);
     });
   }

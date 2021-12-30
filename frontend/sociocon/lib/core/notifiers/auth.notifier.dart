@@ -5,6 +5,7 @@ import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/api/auth.api.dart';
 import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/services/cache_service.dart';
+import 'package:sociocon/meta/views/create_profile.dart';
 
 class AuthenticationNotifier extends ChangeNotifier {
   final AuthenticationAPI _authenticationAPI = new AuthenticationAPI();
@@ -84,11 +85,6 @@ class AuthenticationNotifier extends ChangeNotifier {
             );
         }
       } else if (isAuthenticated) {
-        UserModel userModel = UserModel(
-          userEmailId: userEmail,
-          userName: userName,
-          userPassword: userPassword,
-        );
         await _cacheService
             .writeCache(
               key: "jwtdata",
@@ -97,7 +93,6 @@ class AuthenticationNotifier extends ChangeNotifier {
             .whenComplete(
               () => Navigator.of(context).pushReplacementNamed(
                 CreateProfileRoute,
-                arguments: userModel,
               ),
             );
       }
@@ -124,14 +119,15 @@ class AuthenticationNotifier extends ChangeNotifier {
           key: "jwtdata",
           value: authData,
         );
-
         final List<String>? data = await _cacheService.readProfileCache(
           key: "userProfile",
         );
-        if (data!.isNotEmpty) {
+        if (data != null) {
           Navigator.of(context).pushReplacementNamed(HomeRoute);
         } else {
-          Navigator.of(context).pushReplacementNamed(CreateProfileRoute);
+          Navigator.of(context).pushReplacementNamed(
+            CreateProfileRoute,
+          );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

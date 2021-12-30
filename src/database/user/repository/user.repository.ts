@@ -66,14 +66,17 @@ export class UserRepository extends Repository<UserEntity> {
             //!saving the user
             await this.save(user);
             //!create JWT => sign jwt
-            let userId = this.createQueryBuilder("scUsers")
+            let userData = this.createQueryBuilder("scUsers")
               .select("scUsers.id")
+              .addSelect("scUsers.userEmail")
+              .addSelect("scUsers.userName")
+              .addSelect("scUsers.userPassword")
               .where("scUsers.userEmail = :query", { query: userEmail })
               .getOne();
 
             jwt.sign(
               {
-                userId: userId,
+                userData: userData,
               },
               jwt_secret,
               {
@@ -117,10 +120,14 @@ export class UserRepository extends Repository<UserEntity> {
       .where("scUsers.userEmail = :userEmail", { userEmail: userEmail })
       .getOne();
 
-    let userId = await this.createQueryBuilder("scUsers")
+    let userData = await this.createQueryBuilder("scUsers")
       .select("scUsers.id")
+      .addSelect("scUsers.userEmail")
+      .addSelect("scUsers.userName")
+      .addSelect("scUsers.userPassword")
       .where("scUsers.userEmail = :query", { query: userEmail })
       .getOne();
+
 
     bcrypt.compare(
       userPassword,
@@ -142,7 +149,7 @@ export class UserRepository extends Repository<UserEntity> {
         if (isPasswordMatched) {
           jwt.sign(
             {
-              userId: userId,
+              userData: userData,
             },
             jwt_secret,
             {
