@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/notifiers/auth.notifier.dart';
-import 'package:sociocon/meta/views/signUp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -43,10 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     else {
       _formKey.currentState!.save();
-      loginUser().then((value) {
-        emailController.clear();
-        passwordController.clear();
-      });
+      await loginUser();
     }
   }
 

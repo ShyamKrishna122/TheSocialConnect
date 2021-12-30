@@ -66,7 +66,7 @@ export class UserRepository extends Repository<UserEntity> {
             //!saving the user
             await this.save(user);
             //!create JWT => sign jwt
-            let userData = this.createQueryBuilder("scUsers")
+            let userData = await this.createQueryBuilder("scUsers")
               .select("scUsers.id")
               .addSelect("scUsers.userEmail")
               .addSelect("scUsers.userName")

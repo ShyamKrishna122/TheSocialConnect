@@ -28,13 +28,14 @@ class UserNotifier extends ChangeNotifier {
         bio: bio,
         dp: dp,
       );
+      print(userModel.userEmailId);
       final Map<String, dynamic> parsedUserProfileData =
           await jsonDecode(userProfileData);
       bool isAdded = parsedUserProfileData["added"];
       dynamic profileData = parsedUserProfileData["message"];
       if (isAdded) {
         await _cacheService.writeProfileCache(
-          key: "userProfile",
+          key: userModel.userId!,
           value: [
             userModel.userId as String,
             userModel.userEmailId as String,
@@ -70,6 +71,7 @@ class UserNotifier extends ChangeNotifier {
   Future decodeUserData({
     required BuildContext context,
     required String token,
+    required int option,
   }) async {
     try {
       _userAPI.decodeUserData(token: token).then((value) async {
@@ -77,7 +79,7 @@ class UserNotifier extends ChangeNotifier {
         var userData = parsedData['data'];
         if (userData != null) {
           List<String>? userProfileData = await _cacheService.readProfileCache(
-            key: "userProfile",
+            key: userData['userData']['id'],
           );
           if (userProfileData == null) {
             _userInfo = UserInfoModel(
@@ -88,6 +90,8 @@ class UserNotifier extends ChangeNotifier {
                 userPassword: userData['userData']['userPassword'],
               ),
             );
+            if (option != 0)
+              Navigator.of(context).pushReplacementNamed(CreateProfileRoute);
           } else {
             _userInfo = UserInfoModel(
               userModel: UserModel(

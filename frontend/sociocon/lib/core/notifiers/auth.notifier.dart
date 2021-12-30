@@ -3,21 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/api/auth.api.dart';
-import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/services/cache_service.dart';
-import 'package:sociocon/meta/views/create_profile.dart';
 
 class AuthenticationNotifier extends ChangeNotifier {
   final AuthenticationAPI _authenticationAPI = new AuthenticationAPI();
   final CacheService _cacheService = new CacheService();
-  UserModel _user = UserModel(
-    userId: "",
-    userEmailId: "",
-    userPassword: "",
-    userName: "",
-  );
-
-  UserModel get user => _user;
   Future createAccount({
     required BuildContext context,
     required String userName,
@@ -115,20 +105,13 @@ class AuthenticationNotifier extends ChangeNotifier {
       bool isAuthenticated = parsedUserData["authentication"];
       dynamic authData = parsedUserData["message"];
       if (isAuthenticated) {
-        await _cacheService.writeCache(
-          key: "jwtdata",
-          value: authData,
-        );
-        final List<String>? data = await _cacheService.readProfileCache(
-          key: "userProfile",
-        );
-        if (data != null) {
-          Navigator.of(context).pushReplacementNamed(HomeRoute);
-        } else {
-          Navigator.of(context).pushReplacementNamed(
-            CreateProfileRoute,
-          );
-        }
+        await _cacheService
+            .writeCache(
+              key: "jwtdata",
+              value: authData,
+            )
+            .whenComplete(
+                () => Navigator.of(context).pushReplacementNamed(HomeRoute));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

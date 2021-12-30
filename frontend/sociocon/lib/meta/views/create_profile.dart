@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sociocon/core/models/user_model.dart';
-import 'package:sociocon/core/notifiers/auth.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/core/services/cache_service.dart';
 
@@ -29,12 +27,17 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   @override
   void initState() {
-    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    _cacheService.readCache(key: "jwtdata").then((token) async {
-      await userNotifier.decodeUserData(
-        context: context,
-        token: token!,
-      );
+    Future.delayed(Duration.zero, () async {
+      final userNotifier = Provider.of<UserNotifier>(context, listen: false);
+      final token = await _cacheService.readCache(key: "jwtdata");
+      if (token != null) {
+        String jwt = token;
+        await userNotifier.decodeUserData(
+          context: context,
+          token: jwt,
+          option:0,
+        );
+      }
     });
     super.initState();
   }
@@ -112,7 +115,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userModel = ModalRoute.of(context)!.settings.arguments as UserModel;
     return Scaffold(
       body: _isLoading == false
           ? Stack(
