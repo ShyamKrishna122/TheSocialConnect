@@ -10,7 +10,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserInfoModel userInfoModel =
-        Provider.of<UserNotifier>(context, listen: false).userInfo;
+        Provider.of<UserNotifier>(context).userInfo;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -29,10 +29,7 @@ export class UserInfoEntity extends BaseEntity {
   })
   userBio!: string;
 
-  @OneToOne(() => UserEntity, (user) => user.info, {
-    cascade: true,
-    //createForeignKeyConstraints: false,
-  })
+  @OneToOne(() => UserEntity, (user) => user.info,)
   @JoinColumn()
   user!: UserEntity;
 }

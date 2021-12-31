@@ -67,18 +67,20 @@ export class UserInfoRepository extends Repository<UserInfoEntity> {
   //! Update User Info
 
   async updateUserInfo(req: Request, res: Response) {
-    let { infoId } = req.params;
+    let { userEmail } = req.params;
     let { name, userDp, userBio } = req.body;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+    let info = await this.findOne({ user: user });
     try {
-      await this.createQueryBuilder("info")
-        .leftJoinAndSelect("info.user", "user")
+      await this.createQueryBuilder()
         .update(UserInfoEntity)
         .set({
           name: name,
           userDp: userDp,
           userBio: userBio,
         })
-        .where("id = :id", { id: infoId})
+        .where("id = :id", { id: info?.id })
         .execute()
         .then((updatedData: any) => {
           return res.send({

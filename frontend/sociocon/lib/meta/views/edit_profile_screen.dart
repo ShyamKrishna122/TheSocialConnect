@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/user_model.dart';
+import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final UserInfoModel userInfoModel =
-          Provider.of<UserNotifier>(context, listen: false).userInfo;
+        Provider.of<UserNotifier>(context, listen: false).userInfo;
     return Scaffold(
       appBar: AppBar(
         leading: CloseButton(),
@@ -55,12 +56,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             icon: Icon(
               Icons.check,
             ),
-            onPressed: () async{
-              if(nameController.text.isNotEmpty || bioController.text.isNotEmpty)
-              {
-                if(nameController.text!=userInfoModel.userFullName || bioController.text!=userInfoModel.userBio)
-                {
-                  
+            onPressed: () async {
+              if (nameController.text.isNotEmpty ||
+                  bioController.text.isNotEmpty) {
+                if (nameController.text != userInfoModel.userFullName ||
+                    bioController.text != userInfoModel.userBio) {
+                  await Provider.of<UserInfoNotifier>(context, listen: false)
+                      .updateProfile(
+                    context: context,
+                    userEmail: userInfoModel.userModel!.userEmailId!,
+                    name: nameController.text.trim(),
+                    userDp: "dbjb",
+                    userBio: bioController.text.trim(),
+                  );
                 }
               }
             },

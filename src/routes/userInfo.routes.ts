@@ -10,6 +10,6 @@ infoRouter.post("/add", UserInfoController.addUserInfo);
 infoRouter.get("/:userEmail", UserInfoController.showUserInfo);
 
 //!PUT
-infoRouter.put("/update/:infoId", UserInfoController.updateUserInfo);
+infoRouter.put("/update/:userEmail", UserInfoController.updateUserInfo);
 
 export { infoRouter };

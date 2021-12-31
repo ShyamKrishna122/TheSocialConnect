@@ -10,26 +10,6 @@ class UserAPI {
     "Accept": "application/json",
     "Access-Control-Allow-Origin": '*',
   };
-
-  Future createProfile({
-    required String? userEmail,
-    required String name,
-    required String bio,
-    required String dp,
-  }) async {
-    final Uri uri = Uri.parse(USER_INFO_URL + "/add");
-    final http.Response response = await client.post(uri,
-        headers: headers,
-        body: jsonEncode({
-          "name": name,
-          "userEmail": userEmail,
-          "userDp": dp,
-          "userBio": bio,
-        }));
-    final dynamic body = response.body;
-    return body;
-  }
-
   Future decodeUserData({
     required String token,
   }) async {

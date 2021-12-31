@@ -14,58 +14,27 @@ class UserNotifier extends ChangeNotifier {
 
   UserInfoModel get userInfo => _userInfo;
 
-  Future createProfile({
-    required BuildContext context,
-    required UserModel userModel,
+  Future setUserInfo({
     required String name,
-    required String bio,
-    required String dp,
+    required String userDp,
+    required String userBio,
   }) async {
-    try {
-      var userProfileData = await _userAPI.createProfile(
-        userEmail: userModel.userEmailId,
-        name: name,
-        bio: bio,
-        dp: dp,
-      );
-      print(userModel.userEmailId);
-      final Map<String, dynamic> parsedUserProfileData =
-          await jsonDecode(userProfileData);
-      bool isAdded = parsedUserProfileData["added"];
-      dynamic profileData = parsedUserProfileData["message"];
-      if (isAdded) {
-        await _cacheService.writeProfileCache(
-          key: userModel.userId!,
-          value: [
-            userModel.userId as String,
-            userModel.userEmailId as String,
-            userModel.userName as String,
-            userModel.userPassword as String,
-            name,
-            bio,
-            dp,
-          ],
-        ).whenComplete(
-          () => Navigator.of(context).pushReplacementNamed(
-            HomeRoute,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.black87,
-            content: Text(
-              profileData,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      }
-    } catch (error) {
-      print(error);
-    }
+    _userInfo.userFullName = name;
+    _userInfo.userDp = userDp;
+    _userInfo.userBio = userBio;
+    await _cacheService.writeProfileCache(
+      key: _userInfo.userModel!.userId!,
+      value: [
+        _userInfo.userModel!.userId as String,
+        _userInfo.userModel!.userEmailId as String,
+        _userInfo.userModel!.userName as String,
+        _userInfo.userModel!.userPassword as String,
+        name,
+        userBio,
+        userDp,
+      ],
+    );
+    notifyListeners();
   }
 
   Future decodeUserData({

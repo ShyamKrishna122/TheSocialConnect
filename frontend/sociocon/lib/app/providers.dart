@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sociocon/core/notifiers/auth.notifier.dart';
 import 'package:sociocon/core/notifiers/posts.notifier.dart';
+import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 
 List<SingleChildWidget> providers = [...remoteProviders];
@@ -16,5 +17,8 @@ List<SingleChildWidget> remoteProviders = [
   ),
   ChangeNotifierProvider(
     create: (context) => UserNotifier(),
+  ),
+  ChangeNotifierProvider(
+    create: (context) => UserInfoNotifier(),
   ),
 ];

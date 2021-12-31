@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/core/services/cache_service.dart';
 
@@ -35,7 +36,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         await userNotifier.decodeUserData(
           context: context,
           token: jwt,
-          option:0,
+          option: 0,
         );
       }
     });
@@ -90,11 +91,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   createProfile() async {
     var userNotifier = Provider.of<UserNotifier>(context, listen: false);
+    var userInfoNotifier =
+        Provider.of<UserInfoNotifier>(context, listen: false);
     final userInfoModel = userNotifier.userInfo;
     if (userInfoModel.userModel!.userEmailId!.isNotEmpty &&
         nameController.text.isNotEmpty &&
         bioController.text.isNotEmpty) {
-      await userNotifier.createProfile(
+      await userInfoNotifier.createProfile(
         context: context,
         name: nameController.text.trim(),
         userModel: userInfoModel.userModel!,
