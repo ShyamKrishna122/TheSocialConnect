@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final UserInfoModel userInfoModel =
-        Provider.of<UserNotifier>(context, listen: false).userInfo;
+        Provider.of<UserNotifier>(context).userInfo;
     return Scaffold(
       appBar: _selectedIndex != 4
           ? AppBar(
@@ -128,7 +128,16 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'fav',
           ),
           BottomNavigationBarItem(
-            icon: CircleAvatar(),
+            icon: CircleAvatar(
+              backgroundImage: userInfoModel.userDp!.isNotEmpty
+                  ? NetworkImage(userInfoModel.userDp!)
+                  : null,
+              child: userInfoModel.userDp!.isNotEmpty
+                  ? null
+                  : Icon(
+                      Icons.person,
+                    ),
+            ),
             label: 'me',
           ),
         ],

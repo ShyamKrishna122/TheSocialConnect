@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
+import 'package:sociocon/core/notifiers/utility.notifier.dart';
 import 'package:sociocon/core/services/cache_service.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -26,6 +25,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   final CacheService _cacheService = new CacheService();
 
+  String? _userImage = "";
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
@@ -42,29 +43,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     });
     super.initState();
   }
-
-  // final picker = ImagePicker();
-  // File userAvatar;
-  // String userAvatarUrl;
-
-  // Future pickUserAvatar() async {
-  //   final pickedUserAvatar = await ImagePicker().getImage(
-  //     source: ImageSource.gallery,
-  //     imageQuality: 80,
-  //   );
-  //   setState(() {
-  //     pickedUserAvatar == null
-  //         ? print("Pick an image")
-  //         : userAvatar = File(pickedUserAvatar.path);
-  //   });
-  //   userAvatar != null
-  //       ? Provider.of<UserFirebaseService>(context, listen: false)
-  //           .uploadUserAvatar(
-  //           context,
-  //           userAvatar,
-  //         )
-  //       : print("Image upload error");
-  // }
 
   @override
   void dispose() {
@@ -102,7 +80,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         name: nameController.text.trim(),
         userModel: userInfoModel.userModel!,
         bio: bioController.text.trim(),
-        dp: "hskdfkdw",
+        dp: _userImage!,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -118,6 +96,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final utilityNotifier =
+        Provider.of<UtilityNotifier>(context, listen: false);
+    _userImage = Provider.of<UtilityNotifier>(context, listen: true).userImage;
+    var userNotifier = Provider.of<UserNotifier>(context, listen: false);
     return Scaffold(
       body: _isLoading == false
           ? Stack(
@@ -150,55 +132,53 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                           SizedBox(
                             height: 20 * 1.5,
                           ),
-                          // Container(
-                          //   child: Stack(
-                          //     children: [
-                          //       // Consumer<MyUser>(
-                          //       //   builder: (context, value, child) {
-                          //       //     return CircleAvatar(
-                          //       //       radius: 50,
-                          //       //       backgroundImage: value
-                          //       //               .user.personDp.isNotEmpty
-                          //       //           ? NetworkImage(value.user.personDp)
-                          //       //           : null,
-                          //       //       child: value.user.personDp.isNotEmpty
-                          //       //           ? null
-                          //       //           : Icon(Icons.person),
-                          //       //     );
-                          //       //   },
-                          //       // ),
-                          //       Positioned(
-                          //         right: 0,
-                          //         bottom: 0,
-                          //         child: Container(
-                          //           height: 25,
-                          //           width: 25,
-                          //           decoration: BoxDecoration(
-                          //             color: ThemeColors.kPrimaryColor,
-                          //             shape: BoxShape.circle,
-                          //             border: Border.all(
-                          //               color: Theme.of(context)
-                          //                   .scaffoldBackgroundColor,
-                          //               width: 3,
-                          //             ),
-                          //           ),
-                          //           child: IconButton(
-                          //             alignment: Alignment.center,
-                          //             padding: EdgeInsets.zero,
-                          //             iconSize: 20,
-                          //             icon: Icon(Icons.add),
-                          //             onPressed: () async {
-                          //               await pickUserAvatar();
-                          //             },
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                          // SizedBox(
-                          //   height: 20 * 1,
-                          // ),
+                          Container(
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: _userImage!.isNotEmpty
+                                      ? NetworkImage(_userImage!)
+                                      : null,
+                                  child: _userImage!.isNotEmpty
+                                      ? null
+                                      : Icon(Icons.person),
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    height: 25,
+                                    width: 25,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        width: 3,
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.zero,
+                                      iconSize: 20,
+                                      icon: Icon(Icons.add),
+                                      onPressed: () async {
+                                        await utilityNotifier
+                                            .uploadUserProfileImage(
+                                          userName: userNotifier
+                                              .userInfo.userModel!.userName,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20 * 1,
+                          ),
                           Container(
                             height: 50,
                             padding: EdgeInsets.symmetric(

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
+import 'package:sociocon/core/notifiers/utility.notifier.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -42,6 +43,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     final UserInfoModel userInfoModel =
         Provider.of<UserNotifier>(context, listen: false).userInfo;
+    final utilityNotifier =
+        Provider.of<UtilityNotifier>(context, listen: false);
+    final _userImage =
+        Provider.of<UtilityNotifier>(context, listen: true).userImage;
     return Scaffold(
       appBar: AppBar(
         leading: CloseButton(),
@@ -60,13 +65,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               if (nameController.text.isNotEmpty ||
                   bioController.text.isNotEmpty) {
                 if (nameController.text != userInfoModel.userFullName ||
-                    bioController.text != userInfoModel.userBio) {
+                    bioController.text != userInfoModel.userBio ||
+                    _userImage != userInfoModel.userDp) {
                   await Provider.of<UserInfoNotifier>(context, listen: false)
                       .updateProfile(
                     context: context,
                     userEmail: userInfoModel.userModel!.userEmailId!,
                     name: nameController.text.trim(),
-                    userDp: "dbjb",
+                    userDp: _userImage!,
                     userBio: bioController.text.trim(),
                   );
                 }
@@ -84,14 +90,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 35,
+                backgroundImage:
+                    _userImage!.isNotEmpty ? NetworkImage(_userImage) : null,
+                child: _userImage.isNotEmpty ? null : Icon(Icons.person),
               ),
               SizedBox(
                 height: 8,
               ),
-              Text(
-                "Change Profile Photo",
-                style: TextStyle(
-                  color: Colors.blue,
+              GestureDetector(
+                onTap: () async {
+                  await utilityNotifier.uploadUserProfileImage(
+                    userName: userInfoModel.userModel!.userName,
+                  );
+                },
+                child: Text(
+                  "Change Profile Photo",
+                  style: TextStyle(
+                    color: Colors.blue,
+                  ),
                 ),
               ),
             ],

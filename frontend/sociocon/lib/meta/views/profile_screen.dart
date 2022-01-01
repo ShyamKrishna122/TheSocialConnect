@@ -26,6 +26,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: CircleAvatar(
                     radius: 45,
+                    backgroundImage: userInfoModel.userDp!.isNotEmpty
+                        ? NetworkImage(userInfoModel.userDp!)
+                        : null,
+                    child: userInfoModel.userDp!.isNotEmpty
+                        ? null
+                        : Icon(Icons.person),
                   ),
                 ),
                 CustomInfoWidget(
