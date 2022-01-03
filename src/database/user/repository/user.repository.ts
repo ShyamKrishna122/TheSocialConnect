@@ -246,4 +246,33 @@ export class UserRepository extends Repository<UserEntity> {
       }
     });
   }
+
+  async getSearchResults(req: Request, res: Response) {
+    let token = req.headers.authorization as string;
+    let searchQuery = req.params.searchQuery;
+    let userName = req.params.userName;
+    const jwt_secret = process.env.JWT_SECRET_KEY as string;
+    jwt.verify(token, jwt_secret, async (error: any, authdata: any) => {
+      if (error) {
+        return res.send({
+          success:false,
+          data: error,
+        });
+      } else {
+        let data = await this.createQueryBuilder("scUsers")
+          .select('scUsers.id')
+          .addSelect('scUsers.userName')
+          .addSelect('scUsers.userEmail')
+          .leftJoin("scUsers.info","info")
+          .addSelect('info.userDp')
+          .where('scUsers.userName ILIKE :searchQuery', { searchQuery: `%${searchQuery}%` })
+          .andWhere('scUsers.userName != :userName', { userName: userName })
+          .getMany();
+        return res.send({
+          success:true,
+          data: data,
+        });
+      }
+    });
+  }
 }

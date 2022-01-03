@@ -27,4 +27,9 @@ export class UserController {
     let connectionmanager = getManager().getCustomRepository(UserRepository);
     await connectionmanager.decodeUserData(req, res);
   }
+
+  static async getSearchedResults(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(UserRepository);
+    await connectionmanager.getSearchResults(req, res);
+  }
 }

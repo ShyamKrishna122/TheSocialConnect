@@ -10,9 +10,35 @@ class UserNotifier extends ChangeNotifier {
   final UserAPI _userAPI = new UserAPI();
   final CacheService _cacheService = new CacheService();
 
-  UserInfoModel _userInfo = UserInfoModel();
+  UserInfoModel _userInfo = UserInfoModel(
+    userDp: "",
+    userBio: "",
+    userFullName: "",
+    userModel: UserModel(
+      userId: "",
+      userEmailId: "",
+      userName: "",
+      userPassword: "",
+    ),
+  );
 
   UserInfoModel get userInfo => _userInfo;
+
+  List<UserInfoModel> _friendsList = [];
+  List<UserInfoModel> get friendsList => _friendsList;
+
+  String? _lastSearch = "";
+  String? get lastSearch => _lastSearch;
+
+  void clearLastSearch() {
+    _lastSearch = '';
+    notifyListeners();
+  }
+
+  void clearSearchResults() {
+    _friendsList.clear();
+    notifyListeners();
+  }
 
   Future setUserInfo({
     required String name,
@@ -23,12 +49,12 @@ class UserNotifier extends ChangeNotifier {
     _userInfo.userDp = userDp;
     _userInfo.userBio = userBio;
     await _cacheService.writeProfileCache(
-      key: _userInfo.userModel!.userId!,
+      key: _userInfo.userModel.userId,
       value: [
-        _userInfo.userModel!.userId as String,
-        _userInfo.userModel!.userEmailId as String,
-        _userInfo.userModel!.userName as String,
-        _userInfo.userModel!.userPassword as String,
+        _userInfo.userModel.userId,
+        _userInfo.userModel.userEmailId,
+        _userInfo.userModel.userName,
+        _userInfo.userModel.userPassword as String,
         name,
         userBio,
         userDp,
@@ -58,6 +84,7 @@ class UserNotifier extends ChangeNotifier {
                 userName: userData['userData']['userName'],
                 userPassword: userData['userData']['userPassword'],
               ),
+              userDp: '',
             );
             if (option != 0)
               Navigator.of(context).pushReplacementNamed(CreateProfileRoute);
@@ -79,6 +106,48 @@ class UserNotifier extends ChangeNotifier {
         }
         notifyListeners();
       });
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future getSearchResults({
+    required BuildContext context,
+    required String searchQuery,
+    required String userName,
+    required String token,
+  }) async {
+    try {
+      _lastSearch = searchQuery;
+      final data = await _userAPI.getSearchResults(
+        searchQuery: searchQuery,
+        userName: userName,
+        token: token,
+      );
+      final Map<String, dynamic> parsedUserProfileData = await jsonDecode(data);
+      bool isSuccess = parsedUserProfileData["success"];
+      dynamic userData = parsedUserProfileData["data"];
+      if (isSuccess) {
+        for (var data in userData) {
+          UserInfoModel userInfoModel = UserInfoModel.fromMap(
+            map: data,
+          );
+          _friendsList.add(userInfoModel);
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.black87,
+            content: Text(
+              userData,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+      notifyListeners();
     } catch (error) {
       print(error);
     }

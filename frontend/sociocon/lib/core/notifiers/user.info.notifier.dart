@@ -32,11 +32,11 @@ class UserInfoNotifier extends ChangeNotifier {
       dynamic profileData = parsedUserProfileData["message"];
       if (isAdded) {
         await _cacheService.writeProfileCache(
-          key: userModel.userId!,
+          key: userModel.userId,
           value: [
-            userModel.userId as String,
-            userModel.userEmailId as String,
-            userModel.userName as String,
+            userModel.userId,
+            userModel.userEmailId,
+            userModel.userName,
             userModel.userPassword as String,
             name,
             bio,
@@ -80,7 +80,7 @@ class UserInfoNotifier extends ChangeNotifier {
         userDp: userDp,
       );
       final Map<String, dynamic> parsedUserProfileData =
-          await jsonDecode(userProfileData);
+          jsonDecode(userProfileData);
       bool isUpdated = parsedUserProfileData["updated"];
       dynamic profileData = parsedUserProfileData["data"];
       if (isUpdated) {

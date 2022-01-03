@@ -18,4 +18,7 @@ authRouter.get("/posts/:userEmail", UserController.showUserPosts);
 //!GET
 authRouter.get("/verify", UserController.decodeUserData);
 
+//!GET
+authRouter.get("/fetch/:searchQuery/:userName", UserController.getSearchedResults);
+
 export { authRouter };

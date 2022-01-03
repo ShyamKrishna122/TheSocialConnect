@@ -72,13 +72,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     var userInfoNotifier =
         Provider.of<UserInfoNotifier>(context, listen: false);
     final userInfoModel = userNotifier.userInfo;
-    if (userInfoModel.userModel!.userEmailId!.isNotEmpty &&
+    if (userInfoModel.userModel.userEmailId.isNotEmpty &&
         nameController.text.isNotEmpty &&
         bioController.text.isNotEmpty) {
       await userInfoNotifier.createProfile(
         context: context,
         name: nameController.text.trim(),
-        userModel: userInfoModel.userModel!,
+        userModel: userInfoModel.userModel,
         bio: bioController.text.trim(),
         dp: _userImage!,
       );
@@ -167,7 +167,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                         await utilityNotifier
                                             .uploadUserProfileImage(
                                           userName: userNotifier
-                                              .userInfo.userModel!.userName,
+                                              .userInfo.userModel.userName,
                                         );
                                       },
                                     ),

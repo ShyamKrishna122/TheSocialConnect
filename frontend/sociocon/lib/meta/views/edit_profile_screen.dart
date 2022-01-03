@@ -70,7 +70,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   await Provider.of<UserInfoNotifier>(context, listen: false)
                       .updateProfile(
                     context: context,
-                    userEmail: userInfoModel.userModel!.userEmailId!,
+                    userEmail: userInfoModel.userModel.userEmailId,
                     name: nameController.text.trim(),
                     userDp: _userImage!,
                     userBio: bioController.text.trim(),
@@ -100,7 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               GestureDetector(
                 onTap: () async {
                   await utilityNotifier.uploadUserProfileImage(
-                    userName: userInfoModel.userModel!.userName,
+                    userName: userInfoModel.userModel.userName,
                   );
                 },
                 child: Text(
