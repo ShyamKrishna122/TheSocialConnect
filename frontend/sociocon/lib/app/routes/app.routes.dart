@@ -12,7 +12,6 @@ final String SignUpRoute = '/signUp';
 final String CreateProfileRoute = '/create';
 final String DeciderRoute = '/decider';
 final String EditProfileRoute = '/edit';
-final String FriendProfileRoute = '/friend-profile';
 
 final routes = {
   HomeRoute: (context) => HomeScreen(),
@@ -21,5 +20,4 @@ final routes = {
   CreateProfileRoute: (context) => CreateProfileScreen(),
   DeciderRoute: (context) => DeciderScreen(),
   EditProfileRoute: (context) => EditProfileScreen(),
-  FriendProfileRoute: (context) => FriendProfileScreen(),
 };

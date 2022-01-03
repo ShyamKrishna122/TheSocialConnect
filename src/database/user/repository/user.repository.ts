@@ -265,6 +265,8 @@ export class UserRepository extends Repository<UserEntity> {
           .addSelect('scUsers.userEmail')
           .leftJoin("scUsers.info","info")
           .addSelect('info.userDp')
+          .addSelect('info.name')
+          .addSelect('info.userBio')
           .where('scUsers.userName ILIKE :searchQuery', { searchQuery: `%${searchQuery}%` })
           .andWhere('scUsers.userName != :userName', { userName: userName })
           .getMany();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
+import 'package:sociocon/meta/views/friend_profile_screen.dart';
 
 class SearchFriendScreen extends StatelessWidget {
   const SearchFriendScreen({Key? key}) : super(key: key);
@@ -32,8 +32,12 @@ class SearchFriendScreen extends StatelessWidget {
             friend.userModel.userName,
           ),
           onTap: () {
-            Navigator.of(context).pushReplacementNamed(
-              FriendProfileRoute,
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FriendProfileScreen(
+                  friendInfoModel: friend,
+                ),
+              ),
             );
           },
         );

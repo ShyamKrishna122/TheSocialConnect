@@ -28,6 +28,8 @@ class UserInfoModel {
   factory UserInfoModel.fromMap({required Map<String, dynamic> map}) {
     return UserInfoModel(
       userDp: map['info']['userDp'] == null ? "" : map['info']['userDp'],
+      userFullName: map['info']['name'],
+      userBio: map['info']['userBio'],
       userModel: UserModel(
         userId: map['id'],
         userEmailId: map['userEmail'],
