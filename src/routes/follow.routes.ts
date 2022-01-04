@@ -3,13 +3,13 @@ import { FollowController } from "../controllers/follow.controller";
 
 const followRouter = Router();
 
-//!POST
-followRouter.post("/add/:followingId", FollowController.addFollowing);
+//!GET
+followRouter.get("/add/:userEmail/:followingId", FollowController.addFollowing);
 
-//!POST
-followRouter.post("/isFollowing/:followingId", FollowController.isFollowingUser);
+//!GET
+followRouter.get("/isFollowing/:userEmail/:followingId", FollowController.isFollowingUser);
 
 //!DELETE
-followRouter.delete("/remove/:followingId", FollowController.removeFollowing);
+followRouter.delete("/remove/:userEmail/:followingId", FollowController.removeFollowing);
 
 export { followRouter };

@@ -8,8 +8,8 @@ export class FollowRepository extends Repository<FollowEntity> {
 
   //! follow people
   async addFollowing(req: Request, res: Response) {
-    let { followingId } = req.params;
-    let { userEmail } = req.body;
+    let userEmail = req.params.userEmail;
+    let followingId = req.params.followingId;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });
@@ -34,8 +34,8 @@ export class FollowRepository extends Repository<FollowEntity> {
   //! unfollow people
 
   async removeFollowing(req: Request, res: Response) {
-    let { followingId } = req.params;
-    let { userEmail } = req.body;
+    let userEmail = req.params.userEmail;
+    let followingId = req.params.followingId;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });
@@ -51,12 +51,12 @@ export class FollowRepository extends Repository<FollowEntity> {
 
       return res.send({
         message: "You have unfollowed",
-        following: false,
+        unFollowed: true,
         data: deletedData,
       });
     } catch (error) {
       return res.send({
-        following: false,
+        unFollowed: false,
         message: "Something went wrong",
         data: "Error",
       });
@@ -65,8 +65,8 @@ export class FollowRepository extends Repository<FollowEntity> {
 
   //! checking if a user follows another user or not
   async isFollowingUser(req: Request, res: Response) {
-    let { followingId } = req.params;
-    let { userEmail } = req.body;
+    let userEmail = req.params.userEmail;
+    let followingId = req.params.followingId;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/user_model.dart';
+import 'package:sociocon/core/notifiers/follow.notifier.dart';
+import 'package:sociocon/core/notifiers/user.notifier.dart';
 
-class FriendProfileScreen extends StatelessWidget {
+class FriendProfileScreen extends StatefulWidget {
   final UserInfoModel friendInfoModel;
   const FriendProfileScreen({
     Key? key,
@@ -9,11 +12,19 @@ class FriendProfileScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<FriendProfileScreen> createState() => _FriendProfileScreenState();
+}
+
+class _FriendProfileScreenState extends State<FriendProfileScreen> {
+  @override
   Widget build(BuildContext context) {
+    final followNotifier = Provider.of<FollowNotifier>(context, listen: false);
+    final UserInfoModel userInfoModel =
+        Provider.of<UserNotifier>(context, listen: false).userInfo;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          friendInfoModel.userModel.userName,
+          widget.friendInfoModel.userModel.userName,
         ),
       ),
       body: SingleChildScrollView(
@@ -31,10 +42,10 @@ class FriendProfileScreen extends StatelessWidget {
                     ),
                     child: CircleAvatar(
                       radius: 45,
-                      backgroundImage: friendInfoModel.userDp.isNotEmpty
-                          ? NetworkImage(friendInfoModel.userDp)
+                      backgroundImage: widget.friendInfoModel.userDp.isNotEmpty
+                          ? NetworkImage(widget.friendInfoModel.userDp)
                           : null,
-                      child: friendInfoModel.userDp.isNotEmpty
+                      child: widget.friendInfoModel.userDp.isNotEmpty
                           ? null
                           : Icon(Icons.person),
                     ),
@@ -65,7 +76,7 @@ class FriendProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    friendInfoModel.userFullName!,
+                    widget.friendInfoModel.userFullName!,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -75,13 +86,66 @@ class FriendProfileScreen extends StatelessWidget {
                     height: 3,
                   ),
                   Text(
-                    friendInfoModel.userBio!,
+                    widget.friendInfoModel.userBio!,
                   ),
                 ],
               ),
             ),
             SizedBox(
               height: 20,
+            ),
+            FutureBuilder(
+              future: followNotifier.isFollowing(
+                userEmail: userInfoModel.userModel.userEmailId,
+                followingId: widget.friendInfoModel.userModel.userId,
+              ),
+              builder: (context, snapshot) {
+                final isFollowing = snapshot.data;
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return GestureDetector(
+                  onTap: () async {
+                    if (isFollowing == true) {
+                      await followNotifier.removeFollowing(
+                        userEmail: userInfoModel.userModel.userEmailId,
+                        followingId: widget.friendInfoModel.userModel.userId,
+                      );
+                    } else {
+                      await followNotifier.addFollowing(
+                        userEmail: userInfoModel.userModel.userEmailId,
+                        followingId: widget.friendInfoModel.userModel.userId,
+                      );
+                    }
+                    setState(() {});
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      bottom: 10,
+                    ),
+                    height: 30,
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          8,
+                        ),
+                      ),
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    child: Text(
+                      isFollowing == true ? "UnFollow" : "Follow",
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
