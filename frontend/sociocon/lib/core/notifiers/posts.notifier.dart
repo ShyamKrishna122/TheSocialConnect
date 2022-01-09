@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sociocon/core/api/posts.api.dart';
 import 'package:sociocon/core/models/post_model.dart';
@@ -52,6 +54,26 @@ class PostsNotifier extends ChangeNotifier {
       }
     } catch (error) {
       return [];
+    }
+  }
+
+  Future getPostsCount({
+    required String userEmail,
+  }) async {
+    try {
+      final data = await _postsAPI.getPostsCount(
+        userEmail: userEmail,
+      );
+      final parsedData = await jsonDecode(data);
+      final isReceived = parsedData['received'];
+      final postCount = parsedData['data'];
+      if (isReceived) {
+        return postCount;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      print(error);
     }
   }
 }

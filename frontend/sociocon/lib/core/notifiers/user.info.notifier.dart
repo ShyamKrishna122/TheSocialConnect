@@ -139,17 +139,7 @@ class UserInfoNotifier extends ChangeNotifier {
         );
         return userInfoModel;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.black87,
-            content: Text(
-              profileData,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
+        return false;
       }
     } catch (error) {
       print(error);

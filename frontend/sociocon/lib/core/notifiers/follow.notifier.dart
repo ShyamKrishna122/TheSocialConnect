@@ -71,4 +71,44 @@ class FollowNotifier extends ChangeNotifier {
       print(error);
     }
   }
+
+  Future getFollowingCount({
+    required String userEmail,
+  }) async {
+    try {
+      final data = await _followAPI.getFollowingCount(
+        userEmail: userEmail,
+      );
+      final parsedData = await jsonDecode(data);
+      final isReceived = parsedData['received'];
+      final followingCount = parsedData['data'];
+      if (isReceived) {
+        return followingCount;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future getFollowersCount({
+    required String userEmail,
+  }) async {
+    try {
+      final data = await _followAPI.getFollowersCount(
+        userEmail: userEmail,
+      );
+      final parsedData = await jsonDecode(data);
+      final isReceived = parsedData['received'];
+      final followersCount = parsedData['data'];
+      if (isReceived) {
+        return followersCount;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 }

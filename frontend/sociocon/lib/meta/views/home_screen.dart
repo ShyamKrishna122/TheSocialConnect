@@ -63,7 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final userInfoModel = Provider.of<UserNotifier>(context).userInfo;
     final userNotifier = Provider.of<UserNotifier>(context);
     final pageNotifier = Provider.of<PageNotifier>(context);
-    return _isLoading == false && userInfoModel.userModel.userEmailId.isNotEmpty
+    return _isLoading == false &&
+            userInfoModel.userModel.userEmailId.isNotEmpty &&
+            userInfoModel.userModel.userName.isNotEmpty
         ? Scaffold(
             appBar: pageNotifier.selctedIndex != 4 &&
                     pageNotifier.selctedIndex != 1 &&
@@ -162,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 icon: Icon(
                                   Icons.menu,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  showSettingsDialog();
+                                },
                               ),
                             ],
                           ),
@@ -224,5 +228,65 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CircularProgressIndicator(),
             ),
           );
+  }
+
+  showSettingsDialog() {
+    return showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              const Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 150.0,
+                ),
+                child: Divider(
+                  thickness: 4,
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Settings",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              MaterialButton(
+                color: Colors.blue,
+                child: Text(
+                  'Log Out',
+                ),
+                onPressed: () async {
+                  await _cacheService.deleteCache(
+                    context: context,
+                    key: "jwtdata",
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

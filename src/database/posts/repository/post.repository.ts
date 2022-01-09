@@ -62,7 +62,7 @@ export class PostRepository extends Repository<PostEntity> {
         .orderBy("ScPosts.postTime", "DESC")
         .setParameters(subQuery.getParameters())
         .getRawMany();
-      
+
 
       let posts = postData.map((p: any) => {
         const post: any = {
@@ -94,9 +94,9 @@ export class PostRepository extends Repository<PostEntity> {
   }
 
   //! function to delete my post...
-  async deleteMyPost(req: Request, res: Response) {
-    let { postId } = req.params;
-    let { userEmail } = req.body;
+  async deleteUserPost(req: Request, res: Response) {
+    let postId = req.params.postId;
+    let userEmail = req.params.userEmail;
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });
 
@@ -120,4 +120,60 @@ export class PostRepository extends Repository<PostEntity> {
       });
     }
   }
+
+  //!fetch posts of a particular user
+
+  async fetchUserPosts(req: Request, res: Response) {
+    let { userEmail } = req.params;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+
+    try {
+      let postData = await this.createQueryBuilder("post")
+        .leftJoinAndSelect("post.postMedia", "postMedia")
+        .where("post.userId = :id", { id: user?.id })
+        .getMany();
+      if (postData !== undefined) {
+        return res.send({
+          data: postData,
+          filled: true,
+          received: true,
+        });
+      } else {
+        return res.send({
+          data: "Fill some info",
+          filled: false,
+          received: true,
+        });
+      }
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+        filled: false,
+      });
+    }
+  }
+
+  //!get count of users post
+  async getPostCount(req: Request, res: Response) {
+    let { userEmail } = req.params;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+    try {
+      let postCount = await this.createQueryBuilder("post")
+        .where("post.userId=:id", { id: user?.id })
+        .getCount();
+      return res.send({
+        data: postCount,
+        received: true,
+      });
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+      });
+    }
+  }
+
 }

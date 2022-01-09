@@ -22,4 +22,17 @@ class PostsAPI {
     final Map<String, dynamic> parsedPosts = await jsonDecode(body);
     return parsedPosts;
   }
+
+  Future getPostsCount({
+    required String userEmail,
+  }) async {
+    final postsURL = POST_URL + "/count/$userEmail";
+    final Uri uri = Uri.parse(postsURL);
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
 }

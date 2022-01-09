@@ -12,4 +12,19 @@ export class PostController {
     let connectionmanager = getManager().getCustomRepository(PostRepository);
     await connectionmanager.getPosts(req, res);
   }
+
+  static async showUserPosts(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(PostRepository);
+    await connectionmanager.fetchUserPosts(req, res);
+  }
+
+  static async getPostCount(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(PostRepository);
+    await connectionmanager.getPostCount(req,res);
+  }
+
+  static async deleteUserPost(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(PostRepository);
+    await connectionmanager.deleteUserPost(req,res);
+  }
 }

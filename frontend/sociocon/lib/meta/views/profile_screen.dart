@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/models/user_model.dart';
+import 'package:sociocon/core/notifiers/follow.notifier.dart';
+import 'package:sociocon/core/notifiers/posts.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -11,6 +13,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserInfoModel userInfoModel =
         Provider.of<UserNotifier>(context).userInfo;
+    final postNotifier = Provider.of<PostsNotifier>(context, listen: false);
+    final followNotifier = Provider.of<FollowNotifier>(context, listen: false);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,17 +38,56 @@ class ProfileScreen extends StatelessWidget {
                         : Icon(Icons.person),
                   ),
                 ),
-                CustomInfoWidget(
-                  "20",
-                  "Posts",
+                FutureBuilder(
+                  future: postNotifier.getPostsCount(
+                    userEmail: userInfoModel.userModel.userEmailId,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        height: 0,
+                        width: 0,
+                      );
+                    }
+                    return CustomInfoWidget(
+                      snapshot.data.toString(),
+                      "Posts",
+                    );
+                  },
                 ),
-                CustomInfoWidget(
-                  "100",
-                  "Followers",
+                FutureBuilder(
+                  future: followNotifier.getFollowersCount(
+                    userEmail: userInfoModel.userModel.userEmailId,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        height: 0,
+                        width: 0,
+                      );
+                    }
+                    return CustomInfoWidget(
+                      snapshot.data.toString(),
+                      "Followers",
+                    );
+                  },
                 ),
-                CustomInfoWidget(
-                  "100",
-                  "Following",
+                FutureBuilder(
+                  future: followNotifier.getFollowingCount(
+                    userEmail: userInfoModel.userModel.userEmailId,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        height: 0,
+                        width: 0,
+                      );
+                    }
+                    return CustomInfoWidget(
+                      snapshot.data.toString(),
+                      "Following",
+                    );
+                  },
                 ),
               ],
             ),

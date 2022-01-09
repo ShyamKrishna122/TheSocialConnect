@@ -99,4 +99,48 @@ export class FollowRepository extends Repository<FollowEntity> {
       });
     }
   }
+
+  async getFollowingCount(req: Request, res: Response) {
+    let userEmail = req.params.userEmail;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+    try {
+      let followingCount =
+        (await this.createQueryBuilder("follow")
+          .where("follow.userId=:id", { id: user?.id })
+          .getCount());
+      return res.send({
+        data: followingCount,
+        received: true,
+      });
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+      });
+    }
+  }
+
+  async getFollowersCount(req: Request, res: Response) {
+    let userEmail = req.params.userEmail;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+    try {
+      let followersCount =
+        (await this.createQueryBuilder("follow")
+          .where("follow.followerId=:followingId", {
+            followingId: user?.id,
+          })
+          .getCount());
+      return res.send({
+        data: followersCount,
+        received: true,
+      });
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+      });
+    }
+  }
 }

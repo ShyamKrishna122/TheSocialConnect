@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/api/user.api.dart';
 import 'package:sociocon/core/models/user_model.dart';
+import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/services/cache_service.dart';
 
 class UserNotifier extends ChangeNotifier {
@@ -77,16 +79,26 @@ class UserNotifier extends ChangeNotifier {
             key: userData['userData']['id'],
           );
           if (userProfileData == null) {
-            _userInfo = UserInfoModel(
-              userModel: UserModel(
-                userId: userData['userData']['id'],
-                userEmailId: userData['userData']['userEmail'],
-                userName: userData['userData']['userName'],
-                userPassword: userData['userData']['userPassword'],
-              ),
-              userDp: '',
+            final isProfileAvailable =
+                await Provider.of<UserInfoNotifier>(context, listen: false)
+                    .getUserProfile(
+              context: context,
+              userEmail: userData['userData']['userEmail'],
             );
-            if (option != 0)
+            if (isProfileAvailable is UserInfoModel) {
+              _userInfo = isProfileAvailable;
+            } else {
+              _userInfo = UserInfoModel(
+                userModel: UserModel(
+                  userId: userData['userData']['id'],
+                  userEmailId: userData['userData']['userEmail'],
+                  userName: userData['userData']['userName'],
+                  userPassword: userData['userData']['userPassword'],
+                ),
+                userDp: '',
+              );
+            }
+            if (option != 0 && isProfileAvailable == false)
               Navigator.of(context).pushReplacementNamed(CreateProfileRoute);
           } else {
             _userInfo = UserInfoModel(

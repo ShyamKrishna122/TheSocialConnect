@@ -192,42 +192,7 @@ export class UserRepository extends Repository<UserEntity> {
       }
     });
   }
-
-  //!fetch posts of a particular user
-
-  async fetchUserPosts(req: Request, res: Response) {
-    let { userEmail } = req.params;
-    let userRepo = getCustomRepository(UserRepository);
-    let user = await userRepo.findOne({ userEmail: userEmail });
-
-    try {
-      let postData = await this.createQueryBuilder("user")
-        .leftJoinAndSelect("user.post", "post")
-        .leftJoinAndSelect("user.info", "info")
-        .where("post.userId = :id", { id: user?.id })
-        .getOne();
-      if (postData !== undefined) {
-        return res.send({
-          data: postData,
-          filled: true,
-          received: true,
-        });
-      } else {
-        return res.send({
-          data: "Fill some info",
-          filled: false,
-          received: true,
-        });
-      }
-    } catch (error) {
-      return res.send({
-        data: "Something went wrong",
-        received: false,
-        filled: false,
-      });
-    }
-  }
-
+  
   //! Decoding users JWT
   async decodeUserData(req: Request, res: Response) {
     let tokenData = req.headers.authorization as string;

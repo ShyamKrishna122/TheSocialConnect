@@ -17,4 +17,14 @@ export class FollowController {
     let connectionmanager = getManager().getCustomRepository(FollowRepository);
     await connectionmanager.isFollowingUser(req, res);
   }
+
+  static async getFollowingCount(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(FollowRepository);
+    await connectionmanager.getFollowingCount(req,res);
+  }
+
+  static async getFollowersCount(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(FollowRepository);
+    await connectionmanager.getFollowersCount(req,res);
+  }
 }

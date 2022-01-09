@@ -50,4 +50,33 @@ class FollowAPI {
     final dynamic body = response.body;
     return body;
   }
+
+  Future getFollowingCount({
+    required String userEmail,
+  }) async {
+    final Uri uri = Uri.parse(
+      FOLLOW_URL + "/followingCount/$userEmail",
+    );
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
+
+  Future getFollowersCount({
+    required String userEmail,
+  }) async {
+    final Uri uri = Uri.parse(
+      FOLLOW_URL + "/followersCount/$userEmail",
+    );
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
+
 }
