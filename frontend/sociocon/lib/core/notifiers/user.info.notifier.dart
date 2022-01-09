@@ -110,4 +110,49 @@ class UserInfoNotifier extends ChangeNotifier {
       print(error);
     }
   }
+
+  Future getUserProfile({
+    required BuildContext context,
+    required String userEmail,
+  }) async {
+    try {
+      var userProfileData = await _userInfoAPI.getUserProfile(
+        userEmail: userEmail,
+      );
+      final Map<String, dynamic> parsedUserProfileData =
+          jsonDecode(userProfileData);
+      bool isReceived = parsedUserProfileData["received"];
+      dynamic profileData = parsedUserProfileData["data"];
+      if (isReceived) {
+        Map<String, dynamic> data = {
+          'id': profileData['user']['id'],
+          'userEmail': profileData['user']['userEmail'],
+          'userName': profileData['user']['userName'],
+          'info': {
+            'userDp': profileData['userDp'],
+            'name': profileData['name'],
+            'userBio': profileData['userBio'],
+          }
+        };
+        UserInfoModel userInfoModel = UserInfoModel.fromMap(
+          map: data,
+        );
+        return userInfoModel;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.black87,
+            content: Text(
+              profileData,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 }

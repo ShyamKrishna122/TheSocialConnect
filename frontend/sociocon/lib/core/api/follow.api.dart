@@ -28,8 +28,7 @@ class FollowAPI {
     required String userEmail,
     required String followingId,
   }) async {
-    final Uri uri =
-        Uri.parse(FOLLOW_URL + "/remove/$userEmail/$followingId");
+    final Uri uri = Uri.parse(FOLLOW_URL + "/remove/$userEmail/$followingId");
     final http.Response response = await client.delete(
       uri,
       headers: headers,

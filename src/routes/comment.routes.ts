@@ -10,4 +10,10 @@ commentRouter.post("/add/:postId", CommentController.addComment);
 //!GET
 commentRouter.get("/:postId", CommentController.getPostComments);
 
-export { commentRouter};
+//!GET
+commentRouter.get("/count/:postId", CommentController.getPostCommentCount);
+
+//!DELETE
+commentRouter.delete("/delete/:postId/:userEmail", CommentController.deleteComment);
+
+export { commentRouter };

@@ -4,7 +4,7 @@ import 'package:sociocon/core/models/post_model.dart';
 
 class PostsNotifier extends ChangeNotifier {
   final PostsAPI _postsAPI = new PostsAPI();
-  Future getPosts({
+  Future<List<PostModel>> getPosts({
     required String userMail,
   }) async {
     try {
@@ -36,6 +36,7 @@ class PostsNotifier extends ChangeNotifier {
               'postType': data['postType'],
               'postImageType': data['postImageType'],
               'userId': data['userId'],
+              'userEmail': data['userEmail'],
               'userName': data['userName'],
               'userDp': data['userDp'],
             };
@@ -47,10 +48,10 @@ class PostsNotifier extends ChangeNotifier {
         }
         return _postsList;
       } else {
-        return  _posts['message'];
+        return [];
       }
     } catch (error) {
-      return  error;
+      return [];
     }
   }
 }

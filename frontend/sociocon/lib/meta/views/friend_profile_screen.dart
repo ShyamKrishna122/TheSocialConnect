@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/user_model.dart';
@@ -94,6 +96,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
             SizedBox(
               height: 20,
             ),
+
             FutureBuilder(
               future: followNotifier.isFollowing(
                 userEmail: userInfoModel.userModel.userEmailId,

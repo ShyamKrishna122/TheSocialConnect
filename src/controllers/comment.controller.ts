@@ -12,4 +12,14 @@ export class CommentController {
     let connectionmanager = getManager().getCustomRepository(CommentRepository);
     await connectionmanager.getPostComments(req, res);
   }
+
+  static async getPostCommentCount(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(CommentRepository);
+    await connectionmanager.getPostCommentCount(req,res);
+  }
+
+  static async deleteComment(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(CommentRepository);
+    await connectionmanager.deleteComment(req,res);
+  }
 }

@@ -23,4 +23,9 @@ export class LikeController {
     let connectionmanager = getManager().getCustomRepository(LikeRepository);
     await connectionmanager.getPostLikesCount(req, res);
   }
+
+  static async getPersonList(req: Request, res: Response) {
+    let connectionmanager = getManager().getCustomRepository(LikeRepository);
+    await connectionmanager.getPersonList(req,res);
+  }
 }

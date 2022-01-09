@@ -39,5 +39,5 @@ class UserAPI {
     );
     final body = response.body;
     return body;
-  }
+  } 
 }

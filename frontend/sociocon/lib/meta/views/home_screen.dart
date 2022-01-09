@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sociocon/app/routes/app.routes.dart';
+import 'package:sociocon/core/notifiers/page.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/core/services/cache_service.dart';
 import 'package:sociocon/meta/views/add_post_screen.dart';
 import 'package:sociocon/meta/views/notification_screen.dart';
 import 'package:sociocon/meta/views/profile_screen.dart';
 import 'package:sociocon/meta/views/search_friend_screen.dart';
-import 'package:sociocon/meta/widget/post_body_widget.dart';
+import 'package:sociocon/meta/views/post_body_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
   final CacheService _cacheService = new CacheService();
   bool _isLoading = false;
   TextEditingController _searchQuery = TextEditingController();
@@ -26,14 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _isLoading = true;
     });
-    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    _cacheService.readCache(key: "jwtdata").then((token) async {
-      token1 = token!;
-      await userNotifier.decodeUserData(
-        context: context,
-        token: token,
-        option: 1,
-      );
+    Future.delayed(Duration.zero, () async {
+      final userNotifier = Provider.of<UserNotifier>(context, listen: false);
+      await _cacheService.readCache(key: "jwtdata").then((token) async {
+        token1 = token!;
+        await userNotifier.decodeUserData(
+          context: context,
+          token: token,
+          option: 1,
+        );
+      });
     });
     setState(() {
       _isLoading = false;
@@ -42,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Widget> screens = [
-    PostBodyWidget(),
+    PostBodyScreen(),
     SearchFriendScreen(),
     AddPostScreen(),
     NotificationScreen(),
@@ -59,9 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final userInfoModel = Provider.of<UserNotifier>(context).userInfo;
     final userNotifier = Provider.of<UserNotifier>(context);
-    return _isLoading == false
+    final pageNotifier = Provider.of<PageNotifier>(context);
+    return _isLoading == false && userInfoModel.userModel.userEmailId.isNotEmpty
         ? Scaffold(
-            appBar: _selectedIndex != 4 && _selectedIndex != 1
+            appBar: pageNotifier.selctedIndex != 4 &&
+                    pageNotifier.selctedIndex != 1 &&
+                    pageNotifier.selctedIndex != 2
                 ? AppBar(
                     title: Text("SocioCon"),
                     actions: [
@@ -73,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   )
-                : _selectedIndex == 1
+                : pageNotifier.selctedIndex == 1
                     ? PreferredSize(
                         preferredSize: const Size.fromHeight(
                           60,
@@ -126,47 +132,41 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       )
-                    : AppBar(
-                        title: Text(
-                          userInfoModel.userModel.userName,
-                        ),
-                        actions: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.add,
+                    : pageNotifier.selctedIndex == 2
+                        ? AppBar(
+                            leading: CloseButton(),
+                            title: Text(
+                              "New Post",
                             ),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.menu,
+                            actions: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.check,
+                                ),
+                                onPressed: () {},
+                              ),
+                            ],
+                          )
+                        : AppBar(
+                            title: Text(
+                              userInfoModel.userModel.userName,
                             ),
-                            onPressed: () {},
+                            actions: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.add,
+                                ),
+                                onPressed: () {},
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.menu,
+                                ),
+                                onPressed: () {},
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-            body: screens[_selectedIndex],
-            // body: SingleChildScrollView(
-            //   child: Column(
-            //     children: [
-            //       StoryBodyWigdet(),
-            //       Divider(
-            //         color: Colors.black,
-            //         thickness: 1,
-            //       ),
-            //       PostBodyWidget(),
-            //       MaterialButton(
-            //         color: Colors.red,
-            //         onPressed: () async {
-            //           await _cacheService.deleteCache(
-            //             context: context,
-            //             key: 'jwtdata',
-            //           );
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            body: screens[pageNotifier.selctedIndex],
             bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               items: [
@@ -209,13 +209,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'me',
                 ),
               ],
-              currentIndex: _selectedIndex,
+              currentIndex: pageNotifier.selctedIndex,
               showSelectedLabels: false,
               showUnselectedLabels: false,
               onTap: (value) {
-                setState(() {
-                  _selectedIndex = value;
-                });
+                pageNotifier.setSelectedIndex(
+                  value: value,
+                );
               },
             ),
           )

@@ -49,13 +49,11 @@ export class CommentRepository extends Repository<CommentEntity> {
       if (commentData !== undefined) {
         return res.send({
           data: commentData,
-          filled: true,
           received: true,
         });
       } else {
         return res.send({
           data: "Fill some info",
-          filled: false,
           received: true,
         });
       }
@@ -63,6 +61,56 @@ export class CommentRepository extends Repository<CommentEntity> {
       return res.send({
         data: "Something went wrong",
         received: false,
+      });
+    }
+  }
+
+  //!get comments count for a post
+
+  async getPostCommentCount(req: Request, res: Response) {
+    let { postId } = req.params;
+
+    try {
+      let commentCount = await this.createQueryBuilder("comment")
+        .where("comment.postPostId=:id", { id: postId })
+        .getCount();
+      return res.send({
+        data: commentCount,
+        received: true,
+      });
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+      });
+    }
+  }
+
+  //!delete you comment made in a post
+  async deleteComment(req: Request, res: Response) {
+    let  postId  = req.params.postId;
+    let  userEmail  = req.params.userEmail;
+
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+
+    try {
+      await this.createQueryBuilder("comment")
+        .delete()
+        .from(CommentEntity)
+        .where("postPostId=:postId", { postId: postId })
+        .andWhere("userId=:userId", { userId: user?.id })
+        .execute()
+        .then((data: any) => {
+          return res.send({
+            message: "comment removed",
+            deleted: true,
+          });
+        });
+    } catch (error) {
+      return res.send({
+        message: "Something went wrong",
+        deleted: false,
       });
     }
   }

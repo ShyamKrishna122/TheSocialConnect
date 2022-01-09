@@ -8,8 +8,8 @@ import { LikeEntity } from "../entity/like.entity";
 export class LikeRepository extends Repository<LikeEntity> {
   //! adding like to a post
   async addLike(req: Request, res: Response) {
-    let { postId } = req.params;
-    let { userEmail } = req.body;
+    let postId = req.params.postId;
+    let userEmail = req.params.userEmail;
 
     let postRepo = getCustomRepository(PostRepository);
     let post = await postRepo.findOne({ postId: postId });
@@ -37,8 +37,8 @@ export class LikeRepository extends Repository<LikeEntity> {
   //! removing like of post
 
   async removeLike(req: Request, res: Response) {
-    let { postId } = req.params;
-    let { userEmail } = req.body;
+    let postId = req.params.postId;
+    let userEmail = req.params.userEmail;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });
@@ -53,13 +53,13 @@ export class LikeRepository extends Repository<LikeEntity> {
         .then((data: any) => {
           return res.send({
             message: "Like removed",
-            liked: false,
+            unliked: true,
           });
         });
     } catch (error) {
       return res.send({
         message: "Something went wrong",
-        liked: false,
+        unliked: false,
       });
     }
   }
@@ -67,8 +67,8 @@ export class LikeRepository extends Repository<LikeEntity> {
   //! checking if post is liked by the logged in user
 
   async isLikedByUser(req: Request, res: Response) {
-    let { postId } = req.params;
-    let { userEmail } = req.body;
+    let postId = req.params.postId;
+    let userEmail = req.params.userEmail;
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({ userEmail: userEmail });
 
@@ -82,20 +82,20 @@ export class LikeRepository extends Repository<LikeEntity> {
           .getCount()) >= 1;
       if (isLiked) {
         return res.send({
-          message: "You have already liked this post",
-          isLiked: true,
+          message: "yes",
+          isliked: true,
         });
       } else {
         return res.send({
-          message: "You have not liked this post",
-          isLiked: false,
+          message: "no",
+          isliked: false,
         });
       }
     } catch (error) {
       console.log(error);
       return res.send({
         message: "Something went wrong",
-        isLiked: false,
+        isliked: false,
       });
     }
   }
@@ -114,6 +114,36 @@ export class LikeRepository extends Repository<LikeEntity> {
         received: true,
       });
     } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+      });
+    }
+  }
+
+  //!get list of persons who liked the post..
+
+  async getPersonList(req: Request, res: Response) {
+    let postId = req.params.postId;
+    try {
+      let likeData = await this.createQueryBuilder("like")
+        .leftJoinAndSelect("like.user", "user")
+        .leftJoinAndSelect("user.info","info")
+        .where("like.postPostId = :id", { id: postId })
+        .getMany();
+      if (likeData !== undefined) {
+        return res.send({
+          data: likeData,
+          received: true,
+        });
+      } else {
+        return res.send({
+          data: "Fill some info",
+          received: true,
+        });
+      }
+    }
+    catch (error) {
       return res.send({
         data: "Something went wrong",
         received: false,

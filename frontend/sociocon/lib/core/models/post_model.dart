@@ -1,6 +1,7 @@
 class PostModel {
   int postId;
   String personId;
+  String personEmail;
   String personName;
   String personDp;
   String description;
@@ -12,6 +13,7 @@ class PostModel {
   PostModel({
     required this.postId,
     required this.personId,
+    required this.personEmail,
     required this.personName,
     required this.description,
     required this.personDp,
@@ -25,6 +27,7 @@ class PostModel {
     return PostModel(
       postId: map["postId"],
       personId: map["userId"],
+      personEmail: map["userEmail"],
       personName: map["userName"],
       description: map["postDescription"],
       personDp: map["userDp"],

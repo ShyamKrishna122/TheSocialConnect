@@ -45,13 +45,11 @@ export class UserInfoRepository extends Repository<UserInfoEntity> {
       if (userInfoData !== undefined) {
         return res.send({
           data: userInfoData,
-          filled: true,
           received: true,
         });
       } else {
         return res.send({
           data: "Fill some info",
-          filled: false,
           received: true,
         });
       }

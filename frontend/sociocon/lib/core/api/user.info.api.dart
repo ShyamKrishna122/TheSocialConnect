@@ -47,4 +47,16 @@ class UserInfoAPI {
     final dynamic body = response.body;
     return body;
   }
+
+  Future getUserProfile({
+    required String userEmail,
+  }) async {
+    final Uri uri = Uri.parse(USER_INFO_URL + "/$userEmail");
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
 }

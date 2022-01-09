@@ -4,15 +4,18 @@ import { LikeController } from "../controllers/like.controller";
 const likeRouter = Router();
 
 //!POST
-likeRouter.post("/add/:postId", LikeController.addLike);
+likeRouter.get("/add/:postId/:userEmail", LikeController.addLike);
 
-//!POST
-likeRouter.post("/isLiked/:postId", LikeController.isLikedByUser);
+//!GET
+likeRouter.get("/isLiked/:postId/:userEmail", LikeController.isLikedByUser);
 
 //!GET
 likeRouter.get("/:postId", LikeController.getPostLikesCount);
 
+//!GET
+likeRouter.get("/get/:postId", LikeController.getPersonList);
+
 //!DELETE
-likeRouter.delete("/remove/:postId", LikeController.removeLike);
+likeRouter.delete("/remove/:postId/:userEmail", LikeController.removeLike);
 
 export { likeRouter };

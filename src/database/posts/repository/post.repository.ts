@@ -74,6 +74,7 @@ export class PostRepository extends Repository<PostEntity> {
           postType: p.type,
           postImageType: p.imageType,
           userId: p.userId,
+          userEmail: p.userEmail,
           userName: p.userName,
           userDp: p.userDp,
         };
