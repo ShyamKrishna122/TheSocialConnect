@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sociocon/core/api/follow.api.dart';
+import 'package:sociocon/core/models/user_model.dart';
 
 class FollowNotifier extends ChangeNotifier {
   final FollowAPI _followAPI = new FollowAPI();
@@ -109,6 +110,63 @@ class FollowNotifier extends ChangeNotifier {
       }
     } catch (error) {
       print(error);
+    }
+  }
+
+  Future<List<UserInfoModel>> getFollowersInfo({
+    required String userEmail,
+  }) async {
+    try {
+      final data = await _followAPI.getFollowersInfo(
+        userEmail: userEmail,
+      );
+      final parsedData = await jsonDecode(data);
+      final isReceived = parsedData['received'];
+      if (isReceived) {
+        final followersData = parsedData['data'];
+        List<UserInfoModel> _followersList = [];
+
+        for (var data in followersData) {
+          UserInfoModel userInfoModel = UserInfoModel.fromMapFollowerData(
+            map: data,
+          );
+          _followersList.add(userInfoModel);
+        }
+
+        return _followersList;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  }
+
+  Future<List<UserInfoModel>> getFollowingInfo({
+    required String userEmail,
+  }) async {
+    try {
+      final data = await _followAPI.getFollowingInfo(
+        userEmail: userEmail,
+      );
+      final parsedData = await jsonDecode(data);
+      final isReceived = parsedData['received'];
+      if (isReceived) {
+        final followingData = parsedData['data'];
+        List<UserInfoModel> _followingList = [];
+
+        for (var data in followingData) {
+          UserInfoModel userInfoModel = UserInfoModel.fromMapFollowerData(
+            map: data,
+          );
+          _followingList.add(userInfoModel);
+        }
+        return _followingList;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
     }
   }
 }

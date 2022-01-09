@@ -79,4 +79,32 @@ class FollowAPI {
     return body;
   }
 
+  Future getFollowersInfo({
+    required String userEmail,
+  }) async {
+    final Uri uri = Uri.parse(
+      FOLLOW_URL + "/follower/$userEmail",
+    );
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
+
+  Future getFollowingInfo({
+    required String userEmail,
+  }) async {
+    final Uri uri = Uri.parse(
+      FOLLOW_URL + "/following/$userEmail",
+    );
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
+
 }

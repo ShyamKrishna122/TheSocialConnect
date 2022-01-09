@@ -96,7 +96,6 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
             SizedBox(
               height: 20,
             ),
-
             FutureBuilder(
               future: followNotifier.isFollowing(
                 userEmail: userInfoModel.userModel.userEmailId,

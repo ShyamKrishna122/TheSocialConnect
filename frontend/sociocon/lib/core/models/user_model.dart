@@ -37,4 +37,17 @@ class UserInfoModel {
       ),
     );
   }
+
+  factory UserInfoModel.fromMapFollowerData({required Map<String, dynamic> map}) {
+    return UserInfoModel(
+      userDp: map['userDp'] == null ? "" : map['userDp'],
+      userFullName: map['name'],
+      userBio: map['userBio'],
+      userModel: UserModel(
+        userId: map['userId'],
+        userEmailId: map['userEmail'],
+        userName: map['userName'],
+      ),
+    );
+  }
 }

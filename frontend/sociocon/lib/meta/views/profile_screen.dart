@@ -66,9 +66,14 @@ class ProfileScreen extends StatelessWidget {
                         width: 0,
                       );
                     }
-                    return CustomInfoWidget(
-                      snapshot.data.toString(),
-                      "Followers",
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(FollowersScreenRoute);
+                      },
+                      child: CustomInfoWidget(
+                        snapshot.data.toString(),
+                        "Followers",
+                      ),
                     );
                   },
                 ),
@@ -83,9 +88,14 @@ class ProfileScreen extends StatelessWidget {
                         width: 0,
                       );
                     }
-                    return CustomInfoWidget(
-                      snapshot.data.toString(),
-                      "Following",
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pushNamed(FollowingScreenRoute);
+                      },
+                      child: CustomInfoWidget(
+                        snapshot.data.toString(),
+                        "Following",
+                      ),
                     );
                   },
                 ),

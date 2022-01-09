@@ -18,4 +18,10 @@ followRouter.get("/followersCount/:userEmail", FollowController.getFollowersCoun
 //!DELETE
 followRouter.delete("/remove/:userEmail/:followingId", FollowController.removeFollowing);
 
+//!GET
+followRouter.get("/follower/:userEmail", FollowController.getFollowersInfo);
+
+//!GET
+followRouter.get("/following/:userEmail", FollowController.getFollowingInfo);
+
 export { followRouter };

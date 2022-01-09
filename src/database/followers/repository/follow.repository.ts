@@ -143,4 +143,77 @@ export class FollowRepository extends Repository<FollowEntity> {
       });
     }
   }
+
+  //!fetch info of followers
+
+  async getFollowersInfo(req: Request, res: Response) {
+    let { userEmail } = req.params;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+
+    try {
+      let followersData = await this.createQueryBuilder("ScFollow")
+        .select("*")
+        .leftJoin("ScFollow.user", "user")
+        .leftJoin("user.info", "info")
+        .where("ScFollow.followerId=:followingId", {
+          followingId: user?.id,
+        })
+        .getRawMany();
+      if (followersData !== undefined) {
+        return res.send({
+          data: followersData,
+          received: true,
+        });
+      } else {
+        return res.send({
+          data: "Fill some info",
+          received: false,
+        });
+      }
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        filled: false,
+      });
+    }
+  }
+
+  //!fetch info of followers
+
+  async getFollowingInfo(req: Request, res: Response) {
+    let { userEmail } = req.params;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
+
+    try {
+      let subQuery = this
+        .createQueryBuilder("ScFollow")
+        .select("ScFollow.followerId")
+        .where("ScFollow.userId = :id", { id: user?.id });
+      
+      let followingData = await userRepo.createQueryBuilder("scUsers")
+      .select("*")
+      .leftJoin("scUsers.info","info")
+      .where("scUsers.id IN (" + subQuery.getQuery() + ")")
+      .setParameters(subQuery.getParameters())
+      .getRawMany();
+      if (followingData !== undefined) {
+        return res.send({
+          data: followingData,
+          received: true,
+        });
+      } else {
+        return res.send({
+          data: "Fill some info",
+          received: false,
+        });
+      }
+    } catch (error) {
+      return res.send({
+        data: "Something went wrong",
+        received: false,
+      });
+    }
+  }
 }
