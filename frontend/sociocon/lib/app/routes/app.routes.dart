@@ -24,8 +24,6 @@ final String SearchRoute = '/search';
 final String AddRoute = '/add';
 final String NotifyRoute = '/notify';
 final String ProfileRoute = '/profile';
-final String FollowersScreenRoute = '/followers';
-final String FollowingScreenRoute = '/following';
 
 final routes = {
   HomeRoute: (context) => HomeScreen(),
@@ -39,6 +37,4 @@ final routes = {
   AddRoute: (context) => AddPostScreen(),
   NotifyRoute: (context) => NotificationScreen(),
   ProfileRoute: (context) => ProfileScreen(),
-  FollowersScreenRoute: (context) => FollowersScreen(),
-  FollowingScreenRoute: (context) => FollowingScreen(),
 };

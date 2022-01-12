@@ -90,8 +90,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 35,
-                backgroundImage:
-                    _userImage!.isNotEmpty ? NetworkImage(_userImage) : null,
+                backgroundImage: _userImage!.isNotEmpty
+                    ? NetworkImage(_userImage)
+                    : NetworkImage(userInfoModel.userDp),
                 child: _userImage.isNotEmpty ? null : Icon(Icons.person),
               ),
               SizedBox(

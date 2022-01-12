@@ -80,7 +80,7 @@ class UserInfoNotifier extends ChangeNotifier {
         userDp: userDp,
       );
       final Map<String, dynamic> parsedUserProfileData =
-          jsonDecode(userProfileData);
+          await jsonDecode(userProfileData);
       bool isUpdated = parsedUserProfileData["updated"];
       dynamic profileData = parsedUserProfileData["data"];
       if (isUpdated) {
@@ -120,7 +120,7 @@ class UserInfoNotifier extends ChangeNotifier {
         userEmail: userEmail,
       );
       final Map<String, dynamic> parsedUserProfileData =
-          jsonDecode(userProfileData);
+          await jsonDecode(userProfileData);
       bool isReceived = parsedUserProfileData["received"];
       dynamic profileData = parsedUserProfileData["data"];
       if (isReceived) {
@@ -128,6 +128,7 @@ class UserInfoNotifier extends ChangeNotifier {
           'id': profileData['user']['id'],
           'userEmail': profileData['user']['userEmail'],
           'userName': profileData['user']['userName'],
+          'userPassword': profileData['user']['userPassword'],
           'info': {
             'userDp': profileData['userDp'],
             'name': profileData['name'],

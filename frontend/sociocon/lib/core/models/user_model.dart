@@ -34,11 +34,13 @@ class UserInfoModel {
         userId: map['id'],
         userEmailId: map['userEmail'],
         userName: map['userName'],
+        userPassword: map['userPassword'],
       ),
     );
   }
 
-  factory UserInfoModel.fromMapFollowerData({required Map<String, dynamic> map}) {
+  factory UserInfoModel.fromMapFollowerData(
+      {required Map<String, dynamic> map}) {
     return UserInfoModel(
       userDp: map['userDp'] == null ? "" : map['userDp'],
       userFullName: map['name'],

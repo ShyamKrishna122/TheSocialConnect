@@ -2,9 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sociocon/app/routes/app.routes.dart';
 import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/notifiers/follow.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
+import 'package:sociocon/meta/views/followers_screen.dart';
+import 'package:sociocon/meta/views/following_screen.dart';
+import 'package:sociocon/meta/widget/custom_info_widget.dart';
 
 class FriendProfileScreen extends StatefulWidget {
   final UserInfoModel friendInfoModel;
@@ -53,16 +57,40 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                     ),
                   ),
                   CustomInfoWidget(
-                    "20",
-                    "Posts",
+                    option: 1,
+                    userEmail: widget.friendInfoModel.userModel.userEmailId,
                   ),
-                  CustomInfoWidget(
-                    "100",
-                    "Followers",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => FollowersScreen(
+                            userEmail:
+                                widget.friendInfoModel.userModel.userEmailId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: CustomInfoWidget(
+                      option: 2,
+                      userEmail: widget.friendInfoModel.userModel.userEmailId,
+                    ),
                   ),
-                  CustomInfoWidget(
-                    "100",
-                    "Following",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => FollowingScreen(
+                            userEmail:
+                                widget.friendInfoModel.userModel.userEmailId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: CustomInfoWidget(
+                      option: 3,
+                      userEmail: widget.friendInfoModel.userModel.userEmailId,
+                    ),
                   ),
                 ],
               ),
@@ -152,19 +180,6 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Column CustomInfoWidget(
-    String info,
-    String message,
-  ) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(info),
-        Text(message),
-      ],
     );
   }
 }

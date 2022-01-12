@@ -7,7 +7,11 @@ import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/meta/views/friend_profile_screen.dart';
 
 class FollowingScreen extends StatefulWidget {
-  const FollowingScreen({Key? key}) : super(key: key);
+  const FollowingScreen({
+    Key? key,
+    required this.userEmail,
+  }) : super(key: key);
+  final String userEmail;
 
   @override
   State<FollowingScreen> createState() => _FollowingScreenState();

@@ -6,7 +6,12 @@ import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/meta/views/friend_profile_screen.dart';
 
 class FollowersScreen extends StatefulWidget {
-  const FollowersScreen({Key? key}) : super(key: key);
+  const FollowersScreen({
+    Key? key,
+    required this.userEmail,
+  }) : super(key: key);
+
+  final String userEmail;
 
   @override
   _FollowersScreenState createState() => _FollowersScreenState();
@@ -16,8 +21,6 @@ class _FollowersScreenState extends State<FollowersScreen> {
   @override
   Widget build(BuildContext context) {
     final followNotifier = Provider.of<FollowNotifier>(context, listen: false);
-    final userInfoModel =
-        Provider.of<UserNotifier>(context, listen: false).userInfo;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -26,7 +29,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
       ),
       body: FutureBuilder<List<UserInfoModel>>(
         future: followNotifier.getFollowersInfo(
-          userEmail: userInfoModel.userModel.userEmailId,
+          userEmail: widget.userEmail,
         ),
         builder: (context, AsyncSnapshot<List<UserInfoModel>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

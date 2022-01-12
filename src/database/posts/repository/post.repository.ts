@@ -130,27 +130,42 @@ export class PostRepository extends Repository<PostEntity> {
 
     try {
       let postData = await this.createQueryBuilder("post")
-        .leftJoinAndSelect("post.postMedia", "postMedia")
+        .select("*")
+        .leftJoin("post.postMedia", "postMedia")
         .where("post.userId = :id", { id: user?.id })
-        .getMany();
+        .orderBy("post.postTime", "DESC")
+        .getRawMany();
+      let posts = postData.map((p: any) => {
+        const post: any = {
+          postId: p.postId,
+          postDescription: p.postDescription,
+          postTime: p.postTime,
+          postMediaUrl: p.mediaUrl,
+          postMediaType: p.mediaType,
+          postType: p.type,
+          postImageType: p.imageType,
+          userId: p.userId,
+          userEmail: p.userEmail,
+          userName: p.userName,
+          userDp: p.userDp,
+        };
+        return post;
+      });
       if (postData !== undefined) {
         return res.send({
-          data: postData,
-          filled: true,
+          data: posts,
           received: true,
         });
       } else {
         return res.send({
           data: "Fill some info",
-          filled: false,
-          received: true,
+          received: false,
         });
       }
     } catch (error) {
       return res.send({
         data: "Something went wrong",
         received: false,
-        filled: false,
       });
     }
   }
