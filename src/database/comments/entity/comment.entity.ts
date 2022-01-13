@@ -19,7 +19,7 @@ export class CommentEntity extends BaseEntity {
   })
   commentText!: string;
 
-  @ManyToOne(() => PostEntity, (post) => post.comment)
+  @ManyToOne(() => PostEntity, (post) => post.comment, { onDelete: 'CASCADE' })
   post!: PostEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.comment)

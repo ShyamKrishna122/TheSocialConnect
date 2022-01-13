@@ -7,6 +7,8 @@ import { LikeEntity } from "./database/likes/entity/like.entity";
 import { PostEntity } from "./database/posts/entity/post.entity";
 import { PostMediaEntity } from "./database/posts/entity/post_media.entity";
 import { StoryEntity } from "./database/stories/entity/stories.entity";
+import { StoryMediaEntity } from "./database/stories/entity/stories_media.entity";
+import { StoryViewEntity } from "./database/stories/entity/story_views.entity";
 import { UserEntity } from "./database/user/entity/user.entity";
 import { UserInfoEntity } from "./database/userInfo/entity/userInfo.entity";
 
@@ -35,6 +37,8 @@ const connectionOptions: ConnectionOptions = {
     FollowEntity,
     StoryEntity,
     PostMediaEntity,
+    StoryMediaEntity,
+    StoryViewEntity,
   ],
   synchronize: true,
   dropSchema: false,

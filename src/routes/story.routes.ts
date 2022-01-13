@@ -7,16 +7,10 @@ const storyRouter = Router();
 storyRouter.post("/add/:userEmail", StoryController.addStory);
 
 //!GET
-storyRouter.get("/", StoryController.fetchStory);
+storyRouter.get("/fetch/:userEmail", StoryController.fetchStory);
 
 //!GET
 storyRouter.get("/storyByUser/:userEmail", StoryController.fetchStoryByUser);
-
-//!GET
-storyRouter.get(
-  "/story_user/:userEmail",
-  StoryController.fetchStoryOfOtherUsers
-);
 
 //!DELETE
 storyRouter.delete("/delete/:storyId", StoryController.deleteStory);

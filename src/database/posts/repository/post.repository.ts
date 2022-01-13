@@ -114,6 +114,7 @@ export class PostRepository extends Repository<PostEntity> {
           });
         });
     } catch (error) {
+      console.log(error)
       return res.send({
         message: "Something went wrong",
         deleted: false,

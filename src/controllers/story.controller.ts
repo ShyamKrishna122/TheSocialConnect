@@ -18,11 +18,6 @@ export class StoryController {
     await connectionmanager.fetchStoryByUser(req, res);
   }
 
-  static async fetchStoryOfOtherUsers(req: Request, res: Response) {
-    let connectionmanager = getManager().getCustomRepository(StoryRepository);
-    await connectionmanager.fetchStoryOfOtherUsers(req, res);
-  }
-
   static async deleteStory(req: Request, res: Response) {
     let connectionmanager = getManager().getCustomRepository(StoryRepository);
     await connectionmanager.removeStory(req, res);

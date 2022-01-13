@@ -1,10 +1,10 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { PostEntity } from "./post.entity";
+import { StoryEntity } from "./stories.entity";
 
-@Entity("ScPostsMedia")
-export class PostMediaEntity extends BaseEntity {
+@Entity("ScStoryMedia")
+export class StoryMediaEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
-    postMediaId!: string;
+    storyMediaId!: string;
 
     @Column({
         nullable: false,
@@ -16,8 +16,7 @@ export class PostMediaEntity extends BaseEntity {
     })
     mediaUrl!: string;
 
-
-    @ManyToOne(() => PostEntity, (post) => post.postMedia, { onDelete: 'CASCADE' })
-    post!: PostEntity;
+    @ManyToOne(() => StoryEntity, (story) => story.storyMedia, { onDelete: 'CASCADE' })
+    story!: StoryEntity;
 
 }

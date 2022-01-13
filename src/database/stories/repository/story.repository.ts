@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { EntityRepository, getCustomRepository, Repository } from "typeorm";
+import { FollowRepository } from "../../followers/repository/follow.repository";
 import { UserRepository } from "../../user/repository/user.repository";
 import { StoryEntity } from "../entity/stories.entity";
 
@@ -8,7 +9,6 @@ export class StoryRepository extends Repository<StoryEntity> {
   //! add story function
   async addStory(req: Request, res: Response) {
     let { userEmail } = req.params;
-    let { storyMedia } = req.body;
 
     let userRepo = getCustomRepository(UserRepository);
     let user = await userRepo.findOne({
@@ -17,11 +17,10 @@ export class StoryRepository extends Repository<StoryEntity> {
 
     try {
       let story = new StoryEntity();
-      story.storyMedia = storyMedia;
       story.user = user!;
       await story.save();
       return res.send({
-        message: "Story Added",
+        data: "Story Added",
         added: true,
       });
     } catch (error) {
@@ -33,99 +32,105 @@ export class StoryRepository extends Repository<StoryEntity> {
   }
 
   async fetchStory(req: Request, res: Response) {
+    let { userEmail } = req.params;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({
+      userEmail: userEmail,
+    });
+
+    let followRepo = getCustomRepository(FollowRepository);
     try {
-      let stories = await this.createQueryBuilder("ScStories")
-        .leftJoinAndSelect("ScStories.user", "user")
-        .select()
-        .getMany();
-      if (stories !== undefined) {
-        return res.send({
-          data: stories,
-          filled: true,
-          received: true,
-        });
-      } else {
-        return res.send({
-          data: "Fill some info",
-          filled: false,
-          received: true,
-        });
-      }
+      let subQuery = followRepo
+        .createQueryBuilder("ScFollow")
+        .select("ScFollow.followerId", "fId")
+        .where("ScFollow.userId = :id", { id: user?.id });
+      let storyData = await this.createQueryBuilder("ScStories")
+        .select("*")
+        .innerJoin("ScStories.user", "user")
+        .innerJoin("user.info", "info")
+        .innerJoin("ScStories.storyMedia", "storyMedia")
+        .innerJoin("storyMedia.story", "story")
+        // .innerJoin("ScPosts.view", "view")
+        // .innerJoin("view.story", "story")
+        .where("ScStories.userId IN (" + subQuery.getQuery() + ")")
+        .orderBy("ScStories.storyTime", "DESC")
+        .setParameters(subQuery.getParameters())
+        .getRawMany();
+      let stories = storyData.map((s: any) => {
+        const story: any = {
+          storyId: s.storyId,
+          storyTime: s.storyTime,
+          storyMediaUrl: s.mediaUrl,
+          storyMediaType: s.mediaType,
+          userId: s.userId,
+          userEmail: s.userEmail,
+          userName: s.userName,
+          userDp: s.userDp,
+        };
+        return story;
+      });
+
+      return res.send({
+        data: stories,
+        received: true,
+      });
     } catch (error) {
       return res.send({
         received: false,
-        message: "Something Went Wrong",
+        data: "Something Went Wrong",
       });
     }
   }
 
   async fetchStoryByUser(req: Request, res: Response) {
     let { userEmail } = req.params;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
     try {
-      let stories = await this.createQueryBuilder("ScStories")
-        .leftJoinAndSelect("ScStories.user", "user")
-        .select()
-        .where("user.userEmail=:userEmail", { userEmail: userEmail })
-        .getMany();
-      if (stories !== undefined) {
-        return res.send({
-          data: stories,
-          filled: true,
-          received: true,
-        });
-      } else {
-        return res.send({
-          data: "Fill some info",
-          filled: false,
-          received: true,
-        });
-      }
-    } catch (error) {
-      return res.send({
-        received: false,
-        message: "Something Went Wrong",
+      let storyData = await this.createQueryBuilder("story")
+        .select("*")
+        .leftJoin("story.storyMedia", "storyMedia")
+        .where("story.userId = :id", { id: user?.id })
+        .orderBy("story.storyTime", "DESC")
+        .getRawMany();
+      let stories = storyData.map((p: any) => {
+        const story: any = {
+          postId: p.postId,
+          postDescription: p.postDescription,
+          postTime: p.postTime,
+          postMediaUrl: p.mediaUrl,
+          postMediaType: p.mediaType,
+          postType: p.type,
+          postImageType: p.imageType,
+          userId: p.userId,
+        };
+        return story;
       });
-    }
-  }
-
-  async fetchStoryOfOtherUsers(req: Request, res: Response) {
-    let { userEmail } = req.params;
-    try {
-      let stories = await this.createQueryBuilder("ScStories")
-        .leftJoinAndSelect("ScStories.user", "user")
-        .select()
-        .where("user.userEmail!=:userEmail", { userEmail: userEmail })
-        .getMany();
-      if (stories !== undefined) {
-        return res.send({
-          data: stories,
-          filled: true,
-          received: true,
-        });
-      } else {
-        return res.send({
-          data: "Fill some info",
-          filled: false,
-          received: true,
-        });
-      }
+      return res.send({
+        data: stories,
+        received: true,
+      });
     } catch (error) {
       return res.send({
         received: false,
-        message: "Something Went Wrong",
+        data: "Something Went Wrong",
       });
     }
   }
 
   //! remove story...
   async removeStory(req: Request, res: Response) {
-    let { storyId } = req.params;
+    let storyId = req.params.storyId;
+    let userEmail = req.params.userEmail;
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ userEmail: userEmail });
 
     try {
       await this.createQueryBuilder("ScStories")
         .delete()
         .from(StoryEntity)
         .where("storyId=:storyId", { storyId: storyId })
+        .andWhere("userId=:userId", { userId: user?.id })
         .execute()
         .then((data: any) => {
           return res.send({

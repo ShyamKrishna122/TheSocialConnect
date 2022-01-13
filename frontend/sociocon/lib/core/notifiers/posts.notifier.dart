@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:sociocon/core/api/posts.api.dart';
 import 'package:sociocon/core/models/post_model.dart';
 import 'package:sociocon/core/models/user_model.dart';
@@ -127,6 +128,29 @@ class PostsNotifier extends ChangeNotifier {
       }
     } catch (error) {
       return [];
+    }
+  }
+
+  Future deleteMyPosts({
+    required int postId,
+    required String userEmail,
+  }) async {
+    try {
+      final data = await _postsAPI.deleteMyPosts(
+        postId: postId,
+        userEmail: userEmail,
+      );
+      final parsedData = await jsonDecode(data);
+      final isDeleted = parsedData['deleted'];
+      print(isDeleted);
+      final deleteData = parsedData['message'];
+      if (isDeleted) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      print(error);
     }
   }
 }

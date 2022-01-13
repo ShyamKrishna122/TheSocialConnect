@@ -49,4 +49,18 @@ class PostsAPI {
     final Map<String, dynamic> parsedPosts = await jsonDecode(body);
     return parsedPosts;
   }
+
+  Future deleteMyPosts({
+    required int postId,
+    required String userEmail,
+  }) async {
+    final postsURL = POST_URL + "/delete/$postId/$userEmail";
+    final Uri uri = Uri.parse(postsURL);
+    final http.Response response = await client.delete(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    return body;
+  }
 }
