@@ -16,21 +16,10 @@ export class StoryEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   storyId!: string;
 
-  @Column({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-    nullable: false,
-  })
-  storyTime!: Date;
-
   @ManyToOne(() => UserEntity, (user) => user.story)
   user!: UserEntity;
 
   @OneToMany(() => StoryMediaEntity, (storyMedia) => storyMedia.story)
   @JoinColumn()
   storyMedia!: StoryMediaEntity[];
-
-  @OneToMany(() => StoryViewEntity, (view) => view.story)
-  @JoinColumn()
-  view!: StoryViewEntity[];
 }

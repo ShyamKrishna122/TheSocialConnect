@@ -53,13 +53,15 @@ export class StoryRepository extends Repository<StoryEntity> {
         // .innerJoin("ScPosts.view", "view")
         // .innerJoin("view.story", "story")
         .where("ScStories.userId IN (" + subQuery.getQuery() + ")")
-        .orderBy("ScStories.storyTime", "DESC")
+        .orWhere("ScStories.userId = :id", { id: user?.id })
+        .orderBy("storyMedia.storyTime", "DESC")
         .setParameters(subQuery.getParameters())
         .getRawMany();
       let stories = storyData.map((s: any) => {
         const story: any = {
           storyId: s.storyId,
           storyTime: s.storyTime,
+          storyMediaId: s.storyMediaId,
           storyMediaUrl: s.mediaUrl,
           storyMediaType: s.mediaType,
           userId: s.userId,
@@ -93,16 +95,13 @@ export class StoryRepository extends Repository<StoryEntity> {
         .where("story.userId = :id", { id: user?.id })
         .orderBy("story.storyTime", "DESC")
         .getRawMany();
-      let stories = storyData.map((p: any) => {
+      let stories = storyData.map((s: any) => {
         const story: any = {
-          postId: p.postId,
-          postDescription: p.postDescription,
-          postTime: p.postTime,
-          postMediaUrl: p.mediaUrl,
-          postMediaType: p.mediaType,
-          postType: p.type,
-          postImageType: p.imageType,
-          userId: p.userId,
+          storyId: s.storyId,
+          storyTime: s.storyTime,
+          storyMediaUrl: s.mediaUrl,
+          storyMediaType: s.mediaType,
+          userId: s.userId,
         };
         return story;
       });

@@ -3,27 +3,28 @@ import { EntityRepository, getCustomRepository, Repository } from "typeorm";
 import { UserRepository } from "../../user/repository/user.repository";
 import { StoryViewEntity } from "../entity/story_views.entity";
 import { StoryRepository } from "./story.repository";
+import { StoryMediaRepository } from "./story_media.repository";
 
 @EntityRepository(StoryViewEntity)
 export class StoryViewRepository extends Repository<StoryViewEntity> {
     //! add story view
     async addStoryView(req: Request, res: Response) {
-        let storyId = req.params.storyId;
+        let storyMediaId = req.params.storyMediaId;
         let userEmail = req.params.userEmail;
 
-        let storyRepo = getCustomRepository(StoryRepository);
-        let story = await storyRepo.findOne({ storyId: storyId });
+        let storyMediaRepo = getCustomRepository(StoryMediaRepository);
+        let storyMedia = await storyMediaRepo.findOne({ storyMediaId: storyMediaId });
 
         let userRepo = getCustomRepository(UserRepository);
         let user = await userRepo.findOne({ userEmail: userEmail });
 
         try {
             let view = new StoryViewEntity();
-            view.story = story!;
+            view.storyMedia = storyMedia!;
             view.user = user!;
             await view.save();
             return res.send({
-                message: "like added",
+                message: "view added",
                 viewed: true,
             });
         } catch (error) {
@@ -37,7 +38,7 @@ export class StoryViewRepository extends Repository<StoryViewEntity> {
 
     //! checking if a user follows another user or not
     async isViewedByUser(req: Request, res: Response) {
-        let storyId = req.params.storyId;
+        let storyMediaId = req.params.storyMediaId;
         let userEmail = req.params.userEmail;
         let userRepo = getCustomRepository(UserRepository);
         let user = await userRepo.findOne({ userEmail: userEmail });
@@ -45,8 +46,8 @@ export class StoryViewRepository extends Repository<StoryViewEntity> {
         try {
             let isViewed =
                 (await this.createQueryBuilder("view")
-                    .where("view.storyStoryId = :storyId", {
-                        storyId: storyId,
+                    .where("view.storyMediaStoryMediaId = :storyMediaId", {
+                        storyMediaId: storyMediaId,
                     })
                     .andWhere("view.userId = :id", { id: user?.id })
                     .getCount()) >= 1;
@@ -72,11 +73,11 @@ export class StoryViewRepository extends Repository<StoryViewEntity> {
 
     //! get the total number of views of a story
     async getStoryViewCount(req: Request, res: Response) {
-        let { storyId } = req.params;
+        let { storyMediaId } = req.params;
 
         try {
             let viewCount = await this.createQueryBuilder("view")
-                .where("view.storyStoryId=:id", { id: storyId })
+                .where("view.storyMediaStoryMediaId=:id", { id: storyMediaId })
                 .getCount();
             return res.send({
                 data: viewCount,

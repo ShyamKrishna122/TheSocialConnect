@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:sociocon/core/api/posts.api.dart';
 import 'package:sociocon/core/models/post_model.dart';
 import 'package:sociocon/core/models/user_model.dart';

@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../../user/entity/user.entity";
 import { StoryEntity } from "./stories.entity";
+import { StoryMediaEntity } from "./stories_media.entity";
 
 @Entity("ScStoryViews")
 export class StoryViewEntity extends BaseEntity {
@@ -14,10 +15,10 @@ export class StoryViewEntity extends BaseEntity {
     })
     viewTime!: Date;
 
-    @ManyToOne(() => StoryEntity, (story) => story.view, {
+    @ManyToOne(() => StoryMediaEntity, (storyMedia) => storyMedia.view, {
         onDelete: "CASCADE",
       })
-      story!: StoryEntity;
+      storyMedia!: StoryMediaEntity;
     
       @ManyToOne(() => UserEntity, (user) => user.view, {
         onDelete: "CASCADE",

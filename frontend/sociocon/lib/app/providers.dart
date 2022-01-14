@@ -6,6 +6,8 @@ import 'package:sociocon/core/notifiers/page.notifier.dart';
 import 'package:sociocon/core/notifiers/post_comment.notifier.dart';
 import 'package:sociocon/core/notifiers/post_like.notifier.dart';
 import 'package:sociocon/core/notifiers/posts.notifier.dart';
+import 'package:sociocon/core/notifiers/story.notifier.dart';
+import 'package:sociocon/core/notifiers/story_view.notifier.dart';
 import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/core/notifiers/utility.notifier.dart';
@@ -40,5 +42,11 @@ List<SingleChildWidget> remoteProviders = [
   ),
   ChangeNotifierProvider(
     create: (context) => PostCommentNotifier(),
+  ),
+  ChangeNotifierProvider(
+    create: (context) => StoriesNotifier(),
+  ),
+  ChangeNotifierProvider(
+    create: (context) => StoryViewNotifier(),
   ),
 ];
