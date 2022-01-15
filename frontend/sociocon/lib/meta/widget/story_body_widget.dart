@@ -29,7 +29,6 @@ class StoryBodyWigdet extends StatelessWidget {
               (element) => element.personId == userInfo.userModel.userId,
               orElse: () => StoryModel(
                 storyId: -1,
-                storyTime: DateTime.now(),
                 personId: '',
                 personEmail: '',
                 personName: '',
@@ -63,7 +62,8 @@ class StoryBodyWigdet extends StatelessWidget {
                   );
                 return StoryCircle(
                   story: story,
-                  i:index,
+                  i: index,
+                  option: 0,
                 );
               },
             ),

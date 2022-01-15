@@ -50,8 +50,6 @@ export class StoryRepository extends Repository<StoryEntity> {
         .innerJoin("user.info", "info")
         .innerJoin("ScStories.storyMedia", "storyMedia")
         .innerJoin("storyMedia.story", "story")
-        // .innerJoin("ScPosts.view", "view")
-        // .innerJoin("view.story", "story")
         .where("ScStories.userId IN (" + subQuery.getQuery() + ")")
         .orWhere("ScStories.userId = :id", { id: user?.id })
         .orderBy("storyMedia.storyTime", "DESC")
@@ -91,17 +89,23 @@ export class StoryRepository extends Repository<StoryEntity> {
     try {
       let storyData = await this.createQueryBuilder("story")
         .select("*")
+        .leftJoin("story.user", "user")
+        .leftJoin("user.info", "info")
         .leftJoin("story.storyMedia", "storyMedia")
         .where("story.userId = :id", { id: user?.id })
-        .orderBy("story.storyTime", "DESC")
+        .orderBy("storyMedia.storyTime", "DESC")
         .getRawMany();
       let stories = storyData.map((s: any) => {
         const story: any = {
           storyId: s.storyId,
           storyTime: s.storyTime,
+          storyMediaId: s.storyMediaId,
           storyMediaUrl: s.mediaUrl,
           storyMediaType: s.mediaType,
           userId: s.userId,
+          userEmail: s.userEmail,
+          userName: s.userName,
+          userDp: s.userDp,
         };
         return story;
       });

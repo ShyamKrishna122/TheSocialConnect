@@ -6,10 +6,12 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class StoryInfo extends StatelessWidget {
   final StoryModel story;
+  final DateTime storyTime;
   final double height;
   const StoryInfo({
     required this.story,
     required this.height,
+    required this.storyTime,
   });
 
   @override
@@ -61,12 +63,11 @@ class StoryInfo extends StatelessWidget {
                             story.personName,
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                          //UserBadges(user: user, size: 20),
                         ],
                       ),
                       Text(
                         '${timeago.format(
-                          story.storyTime,
+                          storyTime,
                         )}',
                         style: TextStyle(color: Colors.white),
                       ),

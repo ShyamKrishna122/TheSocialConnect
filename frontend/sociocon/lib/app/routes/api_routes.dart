@@ -1,4 +1,4 @@
-const String BASE_URL = "http://example.herokuapp.com/";
+const String BASE_URL = "https://example.herokuapp.com/";
 const String AUTH_URL = BASE_URL + "user";
 const String USER_INFO_URL = BASE_URL + "info";
 const String POST_URL = BASE_URL + "post";

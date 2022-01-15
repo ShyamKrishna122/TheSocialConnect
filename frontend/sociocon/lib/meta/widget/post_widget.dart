@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sociocon/core/models/post_model.dart';
+import 'package:sociocon/core/models/story_model.dart';
 import 'package:sociocon/core/models/user_model.dart';
 import 'package:sociocon/core/notifiers/posts.notifier.dart';
+import 'package:sociocon/core/notifiers/story.notifier.dart';
 import 'package:sociocon/core/notifiers/user.info.notifier.dart';
 import 'package:sociocon/core/notifiers/user.notifier.dart';
 import 'package:sociocon/meta/views/friend_profile_screen.dart';
@@ -10,6 +12,7 @@ import 'package:sociocon/meta/widget/build_image_widget.dart';
 import 'package:sociocon/meta/widget/description_text.dart';
 import 'package:sociocon/meta/widget/post_comment_widget.dart';
 import 'package:sociocon/meta/widget/post_like_widget.dart';
+import 'package:sociocon/meta/widget/story_circle.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostWidget extends StatefulWidget {
@@ -29,7 +32,7 @@ class _PostWidgetState extends State<PostWidget> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final userInfo = Provider.of<UserNotifier>(context, listen: false).userInfo;
-    final postNotifier = Provider.of<PostsNotifier>(context, listen: false);
+    final storyNotifier = Provider.of<StoriesNotifier>(context, listen: false);
     return Container(
       width: size.width,
       margin: const EdgeInsets.only(
@@ -40,24 +43,56 @@ class _PostWidgetState extends State<PostWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+            padding: const EdgeInsets.only(top: 3.0, left: 8.0),
             child: Row(
               children: [
-                GestureDetector(
-                  child: CircleAvatar(
-                    radius: 20.0,
-                    child: widget.post.personDp.isEmpty
-                        ? Icon(
-                            Icons.person,
-                          )
-                        : null,
-                    backgroundImage: widget.post.personDp.isNotEmpty
-                        ? NetworkImage(
-                            widget.post.personDp,
-                          )
-                        : null,
-                    backgroundColor: Colors.blue,
+                FutureBuilder<StoryModel>(
+                  future: storyNotifier.getStoriesByUser(
+                    userEmail: widget.post.personEmail,
                   ),
+                  builder: (context, AsyncSnapshot<StoryModel> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Container(
+                          height: 0,
+                          width: 0,
+                        ),
+                      );
+                    }
+                    StoryModel myStory;
+                    if (snapshot.hasData) {
+                      myStory = snapshot.data!;
+                    } else {
+                      return Center(
+                        child: Container(
+                          height: 0,
+                          width: 0,
+                        ),
+                      );
+                    }
+                    return myStory.storyId == -1
+                        ? GestureDetector(
+                            child: CircleAvatar(
+                              radius: 20.0,
+                              child: widget.post.personDp.isEmpty
+                                  ? Icon(
+                                      Icons.person,
+                                    )
+                                  : null,
+                              backgroundImage: widget.post.personDp.isNotEmpty
+                                  ? NetworkImage(
+                                      widget.post.personDp,
+                                    )
+                                  : null,
+                              backgroundColor: Colors.blue,
+                            ),
+                          )
+                        : StoryCircle(
+                            story: myStory,
+                            i: 1,
+                            option: 1,
+                          );
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),

@@ -1,6 +1,5 @@
 class StoryModel {
   final int storyId;
-  final DateTime storyTime;
   final String personId;
   final String personEmail;
   final String personName;
@@ -9,7 +8,6 @@ class StoryModel {
 
   StoryModel({
     required this.storyId,
-    required this.storyTime,
     required this.personId,
     required this.personEmail,
     required this.personName,
@@ -25,7 +23,6 @@ class StoryModel {
       personName: map["userName"],
       personDp: map["userDp"],
       mediaUrls: map["storyMedia"],
-      storyTime: DateTime.parse(map["storyTime"]),
     );
   }
 }

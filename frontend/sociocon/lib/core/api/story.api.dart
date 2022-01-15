@@ -22,4 +22,16 @@ class StoriesAPI {
     final Map<String, dynamic> parsedPosts = await jsonDecode(body);
     return parsedPosts;
   }
+
+  Future fetchStoriesByUser({required String userEmail}) async {
+    final storiesURL = STORY_URL + "/storyByUser/$userEmail";
+    final Uri uri = Uri.parse(storiesURL);
+    final http.Response response = await client.get(
+      uri,
+      headers: headers,
+    );
+    final dynamic body = response.body;
+    final Map<String, dynamic> parsedPosts = await jsonDecode(body);
+    return parsedPosts;
+  }
 }

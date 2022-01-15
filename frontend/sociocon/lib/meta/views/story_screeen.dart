@@ -81,103 +81,98 @@ class _StoryScreenState extends State<StoryScreen>
           }
         },
         onTapDown: (detailes) => _onTapDown(detailes),
-        child: Stack(
-          children: <Widget>[
-            PageView.builder(
-              controller: pageController,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: widget.story.mediaUrls.length,
-              itemBuilder: (context, index) {
-                final story = widget.story.mediaUrls[index];
+        child: PageView.builder(
+          controller: pageController,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.story.mediaUrls.length,
+          itemBuilder: (context, index) {
+            final story = widget.story.mediaUrls[index];
+            storyViewNotifier.setStoryViews(
+                storyMediaId: story['mediaId'],
+                userEmail: userInfo.userModel.userEmailId);
 
-                storyViewNotifier.setStoryViews(
-                    storyMediaId: story['mediaId'],
-                    userEmail: userInfo.userModel.userEmailId);
-
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: story['mediaUrl'],
-                      fit: BoxFit.fitHeight,
-                      fadeInDuration: Duration(milliseconds: 500),
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                              value: downloadProgress.progress),
-                        );
-                      },
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      left: 10,
-                      child: Row(
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: story['mediaUrl'],
+                  fit: BoxFit.fitHeight,
+                  fadeInDuration: Duration(milliseconds: 500),
+                  progressIndicatorBuilder: (context, url, downloadProgress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 30.0,
+                  left: 10.0,
+                  right: 10.0,
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          Icon(
-                            Icons.visibility_sharp,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          FutureBuilder(
-                            future: storyViewNotifier.getStoryViewCount(
-                                storyMediaId: story['mediaId']),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container(
-                                  height: 0,
-                                  width: 0,
-                                );
-                              }
-                              return Text(
-                                snapshot.data.toString(),
-                              );
-                            },
-                          ),
+                          ...widget.story.mediaUrls
+                              .asMap()
+                              .map((i, e) {
+                                return MapEntry(
+                                    i,
+                                    AnimatedBar(
+                                      animationController: _animController,
+                                      position: i,
+                                      currentIndex: _currentIndex,
+                                    ));
+                              })
+                              .values
+                              .toList(),
                         ],
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
-            Positioned(
-              top: 30.0,
-              left: 10.0,
-              right: 10.0,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      ...widget.story.mediaUrls
-                          .asMap()
-                          .map((i, e) {
-                            return MapEntry(
-                                i,
-                                AnimatedBar(
-                                  animationController: _animController,
-                                  position: i,
-                                  currentIndex: _currentIndex,
-                                ));
-                          })
-                          .values
-                          .toList(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 1.5, vertical: 10.0),
+                        child: StoryInfo(
+                          height: size.height - 100,
+                          story: widget.story,
+                          storyTime: story['storyTime'],
+                        ),
+                      )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 1.5, vertical: 10.0),
-                    child: StoryInfo(
-                      height: size.height - 100,
-                      story: widget.story,
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 10,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.visibility_sharp,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      FutureBuilder(
+                        future: storyViewNotifier.getStoryViewCount(
+                            storyMediaId: story['mediaId']),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(
+                              height: 0,
+                              width: 0,
+                            );
+                          }
+                          return Text(
+                            snapshot.data.toString(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
