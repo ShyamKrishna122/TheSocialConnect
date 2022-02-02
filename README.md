@@ -5,6 +5,6 @@ This app is basically an Instagram clone that is developed using flutter for fro
 # Database Schema:
 
 <div>
-    <img src="/screenshots/db_schema.png"</img>
+    <img src="/screenshots/database_schema.png"</img>
 </div>
 
